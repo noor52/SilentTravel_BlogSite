@@ -1,0 +1,131 @@
+package com.fardoushlab.iccweb.controllers;
+
+import com.fardoushlab.iccweb.dtos.PlayerDto;
+import com.fardoushlab.iccweb.models.Role;
+import com.fardoushlab.iccweb.models.User;
+import com.fardoushlab.iccweb.request_models.Country;
+import com.fardoushlab.iccweb.request_models.Player;
+import com.fardoushlab.iccweb.services.CountryService;
+import com.fardoushlab.iccweb.services.PlayerService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+
+@Controller
+public class PlayerController {
+
+    @Autowired
+    PlayerService playerService;
+
+    @Autowired
+    CountryService countryService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @GetMapping("/player/add")
+    public String getPlayerAddPage(Model model){
+
+        var countryList = new ArrayList<Country>();
+        countryService.getAllCountry().forEach(country->{
+            var countryRm = new Country();
+            BeanUtils.copyProperties(country,countryRm);
+            countryList.add(countryRm);
+
+        });
+        model.addAttribute("player", new Player());
+        model.addAttribute("country_list",countryList);
+
+        return "player/add";
+    }
+
+
+    @PostMapping("/player/add")
+    public String addNewPlayer(Model model, @ModelAttribute(name = "player") Player player){
+
+        System.out.println(player.toString());
+
+        var country = countryService.getCountryById(player.getCountryId());
+        User user = new User();
+        user.setName(player.getName());
+        user.setRole(Role.ROLE_PLAYER);
+        user.setActive(true);
+        user.setPassword(passwordEncoder.encode("player"));
+
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setAge(player.getAge());
+        playerDto.setDob(player.getDob());
+        playerDto.setActive(true);
+        playerDto.setUser(user);
+        playerDto.setCountry(country);
+
+        playerService.addPlayer(playerDto);
+
+        return "redirect:/player/show-all";
+    }
+
+    @GetMapping("/player/show-all")
+    public String method(Model model){
+
+        var playerList = new ArrayList<Player>();
+
+        playerService.getAllPlayer().forEach(playerDto -> {
+            var player  = new Player();
+
+            BeanUtils.copyProperties(playerDto,player);
+            player.setCountryName(playerDto.getCountry().getName());
+            player.setName(playerDto.getUser().getName());
+            playerList.add(player);
+
+        });
+
+        model.addAttribute("player_list",playerList);
+        return "player/show-all";
+    }
+
+    @GetMapping("/player/edit")
+    public String getPlayerEditPage(Model model, @RequestParam(name = "id") long id){
+        var playerDto = playerService.getPlayerById(id);
+        var player = new Player();
+        BeanUtils.copyProperties(playerDto,player);
+        player.setCountryName(playerDto.getCountry().getName());
+        player.setCountryId(playerDto.getCountry().getId());
+        player.setName(playerDto.getUser().getName());
+
+
+        model.addAttribute("player",player);
+        return "player/edit";
+    }
+
+    @PostMapping("/player/edit")
+    public String saveEditedPlayer(Model model, @ModelAttribute(name = "player") Player player){
+
+
+        PlayerDto playerDto = playerService.getPlayerById(player.getId());
+        playerDto.setDob(player.getDob());
+        playerDto.setAge(player.getAge());
+
+        playerService.saveEditedPlayer(playerDto);
+        return "redirect:/player/show-all";
+    }
+
+
+
+       /*
+
+    @GetMapping("")
+    public String method(Model model){
+        return "";
+    }
+
+    */
+
+}

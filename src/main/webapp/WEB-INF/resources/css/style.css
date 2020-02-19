@@ -1,0 +1,60 @@
+*{margin: 0; padding: 0; outline: 0}
+
+body{
+	font-family: arial;
+	font-size: 18px;
+	color: #444;
+	line-height: 25px;
+}
+
+.header{
+
+}
+
+.content{
+	background: #f0f0f0;
+	margin: 0 auto;
+
+}
+.maincontent{
+	background: #fff;
+	margin: 10px;
+	min-height: 500px;
+	padding: 5px 10px;
+}
+
+.welcome-header{
+	text-align: center;
+}
+.left-content{
+	min-height: 500px;
+	border: 1px solid #ddd;
+	text-align: center;
+	padding: 5px 10px;
+}
+
+.right-content{
+	min-height: 500px;
+	border: 1px solid #ddd;
+	padding: 5px 10px;
+}
+
+.display-block{
+  
+    display: inline-block;
+   
+}
+
+.input-right{
+	position: absolute;
+	right: 10px;
+	top:100px;
+}
+
+.header, .footer{
+
+	background: #ddd;
+	text-align: center;
+	padding: 10px;
+
+}
