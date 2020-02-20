@@ -8,6 +8,7 @@ import com.fardoushlab.iccweb.request_models.Country;
 import com.fardoushlab.iccweb.request_models.Staff;
 import com.fardoushlab.iccweb.services.CountryService;
 import com.fardoushlab.iccweb.services.StaffService;
+import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 
@@ -70,7 +72,8 @@ public class StaffController {
 
         StaffDto staffDto = new StaffDto();
         staffDto.setAge(staff.getAge());
-        staffDto.setDob(staff.getDob());
+
+        staffDto.setDob(Util.getFormattedDate(staff.getDob(),Util.DOB_DATE_FORMAT));
         staffDto.setActive(true);
         staffDto.setUser(user);
         staffDto.setCountry(country);
@@ -91,6 +94,7 @@ public class StaffController {
             BeanUtils.copyProperties(staffDto,staff);
             staff.setCountryName(staffDto.getCountry().getName());
             staff.setName(staffDto.getUser().getName());
+            staff.setDob(Util.getStringDate(staffDto.getDob(),Util.DOB_DATE_FORMAT));
             staffList.add(staff);
 
         });
@@ -99,12 +103,49 @@ public class StaffController {
         return "staff/show-all";
     }
 
+
+    @GetMapping("/staff/edit")
+    public String getStaffEditPage(Model model, @RequestParam(name = "id") long id){
+        var staffDto = staffService.getCoachingStaffById(id);
+        var staff = new Staff();
+        BeanUtils.copyProperties(staffDto,staff);
+        staff.setCountryName(staffDto.getCountry().getName());
+        staff.setCountryId(staffDto.getCountry().getId());
+        staff.setDob(Util.getStringDate(staffDto.getDob(),Util.DOB_DATE_FORMAT));
+        staff.setName(staffDto.getUser().getName());
+
+
+        model.addAttribute("staff",staff);
+        return "staff/edit";
+    }
+
+    @PostMapping("/staff/edit")
+    public String saveEditedStaff(Model model, @ModelAttribute(name = "staff") Staff staff){
+
+        StaffDto staffDto = staffService.getCoachingStaffById(staff.getId());
+        staffDto.setDob(Util.getFormattedDate(staff.getDob(),Util.DOB_DATE_FORMAT));
+        staffDto.setAge(staff.getAge());
+
+        staffService.saveEditedCoachingStaff(staffDto);
+        return "redirect:/staff/show-all";
+    }
+
+
+    @GetMapping("staff/delete")
+    public String deleteStaffById(Model model, @RequestParam(name = "id") long id){
+
+        staffService.changeCoachingStaffActiveStatus(id,false);
+        staffService.deactivateTeamStaff(id);
+        return "redirect:/staff/show-all";
+    }
+
+    
        /*
 
-    @GetMapping("")
-    public String method(Model model){
-        return "";
-    }
+        @GetMapping("")
+        public String showAllStaff(Model model){
+            return "";
+        }
 
     */
 }

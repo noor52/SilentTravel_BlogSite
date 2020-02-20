@@ -11,6 +11,7 @@
 <html>
 <head>
     <title>Add Staff</title>
+<jsp:include page="../includes/dobdatepicker.jsp"/>
 </head>
 <body>
 
@@ -21,7 +22,7 @@
     <form:input path="name"/></br>
 
     <label>Date of Birth</label>
-    <form:input path="dob"/></br>
+    <form:input id="dobdatepicker" path="dob"/></br>
 
     <label>Age: </label>
     <form:input path="age"/></br>

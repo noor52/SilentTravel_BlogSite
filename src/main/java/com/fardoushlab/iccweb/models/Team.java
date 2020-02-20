@@ -17,6 +17,9 @@ public class Team implements Serializable {
     @Column(name = "name", updatable = true, nullable = false)
     private String name;
 
+    @Column(name = "isActive",updatable = true, nullable = false)
+    private boolean isActive = true;
+
     @ManyToOne
     @JoinColumn(name = "c_id")
     private Country country;
@@ -47,5 +50,13 @@ public class Team implements Serializable {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

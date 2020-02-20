@@ -3,6 +3,7 @@ package com.fardoushlab.iccweb.services;
 import com.fardoushlab.iccweb.config.persistancy.HibernateConfig;
 import com.fardoushlab.iccweb.dtos.PlayerDto;
 import com.fardoushlab.iccweb.exceptions.ResourceNotFoundException;
+import com.fardoushlab.iccweb.models.Country;
 import com.fardoushlab.iccweb.models.Player;
 import com.fardoushlab.iccweb.models.TeamPlayer;
 import com.fardoushlab.iccweb.models.User;
@@ -123,6 +124,7 @@ public class PlayerService {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Player> playerCriteriaQuery = cb.createQuery(Player.class);
         Root<Player> root = playerCriteriaQuery.from(Player.class);
+        playerCriteriaQuery.where(cb.isTrue(root.get("isActive")));
 
         var query = session.createQuery(playerCriteriaQuery);
 
@@ -191,7 +193,7 @@ public class PlayerService {
         CriteriaQuery<Player> playerQuery = cb.createQuery(Player.class);
         Root<Player> playerRoot = playerQuery.from(Player.class);
 
-       // playerQuery.where(cb.equal(playerRoot.get("c_id"),countryId));
+      //  playerQuery.where(cb.equal(playerRoot.get("c_id"),countryId));
 
         Subquery<Long> sq = playerQuery.subquery(Long.class);
         Root<TeamPlayer> tproot = sq.from(TeamPlayer.class);
@@ -199,12 +201,16 @@ public class PlayerService {
         sq.select(tproot.get("player"));
         sq.distinct(true);
 
-        Predicate[] p = {
-                cb.equal(playerRoot.get("country"),countryId),
-                playerRoot.get("id").in(sq).not()
-        };
+        // select those player who matches the country and not assigned to any team
+        playerQuery.where(cb.and(cb.equal(playerRoot.get("country"),countryId),
+                playerRoot.get("id").in(sq).not()));
 
-        playerQuery.where(p);
+      /*  Predicate[] p = {
+           cb.and(cb.equal(playerRoot.get("country"),countryId),
+                playerRoot.get("id").in(sq).not())
+        };*/
+
+
 
         var query = session.createQuery(playerQuery);
         var playerList = new ArrayList<Player>();
@@ -216,7 +222,6 @@ public class PlayerService {
             session.close();
         }
 
-        //System.out.println(playerList.size());
         var playerDtoList = new ArrayList<PlayerDto>();
 
         playerList.forEach(player->{
@@ -277,6 +282,95 @@ public class PlayerService {
 
         return playerDtoList;
     }
+
+    @Transactional
+    public void changePlayerActiveStatus(long playerId, boolean isActive) {
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<Player> playerdelete = criteriaBuilder.createCriteriaUpdate(Player.class);
+        Root<Player> root = playerdelete.from(Player.class);
+        playerdelete.where(criteriaBuilder.equal(root.get("id"), playerId));
+        playerdelete.set("isActive",isActive);
+
+        var query = session.createQuery(playerdelete);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+
+    }
+
+    public void deactivePlayerInTeam(long playerId){
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<TeamPlayer> tpquery = criteriaBuilder.createCriteriaUpdate(TeamPlayer.class);
+        Root<TeamPlayer> root = tpquery.from(TeamPlayer.class);
+        tpquery.where(criteriaBuilder.equal(root.get("player"), playerId));
+        tpquery.set("isActive",false);
+
+        var query = session.createQuery(tpquery);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+    }
+
+    public void changeCountryPlayerActiveStatus(long countryId, boolean isActive){
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<Player> playerdelete = criteriaBuilder.createCriteriaUpdate(Player.class);
+        Root<Player> root = playerdelete.from(Player.class);
+        playerdelete.where(criteriaBuilder.equal(root.get("country"), countryId));
+        playerdelete.set("isActive",isActive);
+
+        var query = session.createQuery(playerdelete);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+    }
+
 
 
 }

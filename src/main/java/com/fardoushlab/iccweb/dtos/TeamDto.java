@@ -2,6 +2,7 @@ package com.fardoushlab.iccweb.dtos;
 
 import com.fardoushlab.iccweb.models.Country;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 
 public class TeamDto implements Serializable {
@@ -14,11 +15,6 @@ public class TeamDto implements Serializable {
     public TeamDto() {
     }
 
-    public TeamDto(long id, String name, Country country) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-    }
 
     public long getId() {
         return id;
@@ -43,5 +39,6 @@ public class TeamDto implements Serializable {
     public void setCountry(Country country) {
         this.country = country;
     }
+
 }
 

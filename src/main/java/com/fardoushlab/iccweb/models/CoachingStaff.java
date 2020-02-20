@@ -2,6 +2,7 @@ package com.fardoushlab.iccweb.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "coaching_staff")
@@ -19,7 +20,7 @@ public class CoachingStaff  implements Serializable {
     private long age;
 
     @Column(name = "dob",updatable = true, nullable = false)
-    private String dob;
+    private LocalDate dob;
 
     @ManyToOne
     @JoinColumn(name = "c_id", updatable = true, nullable = false)
@@ -74,11 +75,12 @@ public class CoachingStaff  implements Serializable {
         this.age = age;
     }
 
-    public String getDob() {
+
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(String dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 }

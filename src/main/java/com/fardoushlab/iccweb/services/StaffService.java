@@ -2,6 +2,8 @@ package com.fardoushlab.iccweb.services;
 
 import com.fardoushlab.iccweb.config.persistancy.HibernateConfig;
 import com.fardoushlab.iccweb.dtos.StaffDto;
+import com.fardoushlab.iccweb.exceptions.ResourceNotFoundException;
+import com.fardoushlab.iccweb.models.CoachingStaff;
 import com.fardoushlab.iccweb.models.CoachingStaff;
 import com.fardoushlab.iccweb.models.TeamStaff;
 import com.fardoushlab.iccweb.request_models.Staff;
@@ -47,6 +49,33 @@ public class StaffService {
             session.close();
         }
 
+    }
+
+    @Transactional
+    public void saveEditedCoachingStaff(StaffDto staffDto){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        CoachingStaff staff = new CoachingStaff();
+        BeanUtils.copyProperties(staffDto,staff);
+
+        try{
+            //session.save(staff);
+            session.update(staff);
+            transaction.commit();
+        }catch (HibernateException e){
+            if (transaction!= null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
     }
 
  /*   public boolean isStaffAlreadyExists(String staffName){
@@ -110,6 +139,39 @@ public class StaffService {
 
 
         return staffDtoList;
+    }
+
+    public StaffDto  getCoachingStaffById(long staffId){
+
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<CoachingStaff> staffCriteriaQuery = cb.createQuery(CoachingStaff.class);
+        Root<CoachingStaff> root = staffCriteriaQuery.from(CoachingStaff.class);
+        staffCriteriaQuery.where(cb.equal(root.get("id"),staffId));
+
+        var query = session.createQuery(staffCriteriaQuery);
+
+        StaffDto staffDto = new StaffDto();
+        try {
+            CoachingStaff staff = query.getSingleResult();
+            if (staff == null){
+                throw new ResourceNotFoundException("No staff found");
+            }
+            BeanUtils.copyProperties(staff,staffDto);
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+        return staffDto;
     }
 
     public List<StaffDto> getNonAssignedCountryStaff(long countryId){
@@ -213,4 +275,98 @@ public class StaffService {
 
         return staffDtoList;
     }
+
+    @Transactional
+    public void changeCoachingStaffActiveStatus(long staffId, boolean isActive) {
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<CoachingStaff> staffdelete = criteriaBuilder.createCriteriaUpdate(CoachingStaff.class);
+        Root<CoachingStaff> root = staffdelete.from(CoachingStaff.class);
+        staffdelete.where(criteriaBuilder.equal(root.get("id"), staffId));
+        staffdelete.set("isActive",isActive);
+
+        var query = session.createQuery(staffdelete);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+
+    }
+
+    @Transactional
+    public void deactivateTeamStaff(long staffId){
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<TeamStaff> ctquery = criteriaBuilder.createCriteriaUpdate(TeamStaff.class);
+        Root<TeamStaff> root = ctquery.from(TeamStaff.class);
+        ctquery.where(criteriaBuilder.equal(root.get("staff"), staffId));
+        ctquery.set("isActive",false);
+
+        var query = session.createQuery(ctquery);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+    }
+
+    @Transactional
+    public void changeCountryCoachingStaffActiveStatus(long countryId, boolean isActive) {
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<CoachingStaff> staffdelete = criteriaBuilder.createCriteriaUpdate(CoachingStaff.class);
+        Root<CoachingStaff> root = staffdelete.from(CoachingStaff.class);
+        staffdelete.where(criteriaBuilder.equal(root.get("country"), countryId));
+        staffdelete.set("isActive",isActive);
+
+        var query = session.createQuery(staffdelete);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+
+    }
+
+
 }

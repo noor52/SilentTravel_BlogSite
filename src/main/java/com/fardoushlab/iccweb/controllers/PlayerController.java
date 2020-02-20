@@ -7,6 +7,7 @@ import com.fardoushlab.iccweb.request_models.Country;
 import com.fardoushlab.iccweb.request_models.Player;
 import com.fardoushlab.iccweb.services.CountryService;
 import com.fardoushlab.iccweb.services.PlayerService;
+import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Controller
 public class PlayerController {
@@ -62,7 +65,9 @@ public class PlayerController {
 
         PlayerDto playerDto = new PlayerDto();
         playerDto.setAge(player.getAge());
-        playerDto.setDob(player.getDob());
+
+        LocalDate dob = Util.getFormattedDate(player.getDob(),Util.DOB_DATE_FORMAT);
+        playerDto.setDob(dob);
         playerDto.setActive(true);
         playerDto.setUser(user);
         playerDto.setCountry(country);
@@ -73,7 +78,7 @@ public class PlayerController {
     }
 
     @GetMapping("/player/show-all")
-    public String method(Model model){
+    public String showAllPlayer(Model model){
 
         var playerList = new ArrayList<Player>();
 
@@ -83,6 +88,7 @@ public class PlayerController {
             BeanUtils.copyProperties(playerDto,player);
             player.setCountryName(playerDto.getCountry().getName());
             player.setName(playerDto.getUser().getName());
+            player.setDob(Util.getStringDate(playerDto.getDob(),Util.DOB_DATE_FORMAT));
             playerList.add(player);
 
         });
@@ -108,9 +114,9 @@ public class PlayerController {
     @PostMapping("/player/edit")
     public String saveEditedPlayer(Model model, @ModelAttribute(name = "player") Player player){
 
-
         PlayerDto playerDto = playerService.getPlayerById(player.getId());
-        playerDto.setDob(player.getDob());
+
+        playerDto.setDob(Util.getFormattedDate(player.getDob(),Util.DOB_DATE_FORMAT));
         playerDto.setAge(player.getAge());
 
         playerService.saveEditedPlayer(playerDto);
@@ -118,11 +124,19 @@ public class PlayerController {
     }
 
 
+    @GetMapping("player/delete")
+    public String deletePlayByid(Model model, @RequestParam(name = "id") long id){
+
+        playerService.changePlayerActiveStatus(id,false);
+        playerService.deactivePlayerInTeam(id);
+
+        return "redirect:/player/show-all";
+    }
 
        /*
 
     @GetMapping("")
-    public String method(Model model){
+    public String showAllPlayer(Model model){
         return "";
     }
 

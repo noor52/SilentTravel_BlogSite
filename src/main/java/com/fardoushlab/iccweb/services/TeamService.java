@@ -4,6 +4,7 @@ import com.fardoushlab.iccweb.config.persistancy.HibernateConfig;
 import com.fardoushlab.iccweb.dtos.TeamDto;
 import com.fardoushlab.iccweb.exceptions.ResourceAlreadyExistException;
 import com.fardoushlab.iccweb.exceptions.ResourceNotFoundException;
+import com.fardoushlab.iccweb.models.CoachingStaff;
 import com.fardoushlab.iccweb.models.Team;
 import com.fardoushlab.iccweb.models.TeamPlayer;
 import com.fardoushlab.iccweb.models.TeamStaff;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class TeamService {
     public void addNewTeam( TeamDto teamDto){
         Team team = new Team();
         BeanUtils.copyProperties(teamDto,team);
+        team.setActive(true);
 
         if(isTeamAlreadyExists(team)) throw new ResourceAlreadyExistException("Sorry, a Team already exists with this name");
 
@@ -55,6 +58,31 @@ public class TeamService {
 
     }
 
+    public void saveEditedTeam(TeamDto dto){
+
+        Team team = new Team();
+        BeanUtils.copyProperties(dto,team);
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        try{
+            session.update(team);
+            transaction.commit();
+        }catch (HibernateException e){
+            if (transaction!= null){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+    }
 
     public boolean isTeamAlreadyExists(Team team){
 
@@ -131,6 +159,7 @@ public class TeamService {
         CriteriaQuery<Team> teamCriteriaQuery = cb.createQuery(Team.class);
         Root<Team> root = teamCriteriaQuery.from(Team.class);
 
+        teamCriteriaQuery.where(cb.equal(root.get("isActive"),true));
         var query = session.createQuery(teamCriteriaQuery);
 
         var teamList = new ArrayList<TeamDto>();
@@ -233,4 +262,125 @@ public class TeamService {
             session.close();
         }
     }
+
+    @Transactional
+    public void changeTeamActiveStatus(long teamId, boolean isActive) {
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<Team> teamDelete = criteriaBuilder.createCriteriaUpdate(Team.class);
+        Root<Team> root = teamDelete.from(Team.class);
+        teamDelete.where(criteriaBuilder.equal(root.get("id"), teamId));
+        teamDelete.set("isActive",isActive);
+
+        var query = session.createQuery(teamDelete);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+
+    }
+
+    public void deactiveTeamPlayers(long teamId){
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<TeamPlayer> tpquery = criteriaBuilder.createCriteriaUpdate(TeamPlayer.class);
+        Root<TeamPlayer> root = tpquery.from(TeamPlayer.class);
+        tpquery.where(criteriaBuilder.equal(root.get("team"), teamId));
+        tpquery.set("isActive",false);
+
+        var query = session.createQuery(tpquery);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+    }
+
+    @Transactional
+    public void deactiveTeamStaff(long teamId){
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<TeamStaff> ctquery = criteriaBuilder.createCriteriaUpdate(TeamStaff.class);
+        Root<TeamStaff> root = ctquery.from(TeamStaff.class);
+        ctquery.where(criteriaBuilder.equal(root.get("team"), teamId));
+        ctquery.set("isActive",false);
+
+        var query = session.createQuery(ctquery);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+    }
+
+    @Transactional
+    public void changeCountryTeamActiveStatus(long countryId, boolean isActive){
+
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<Team> teamDelete = criteriaBuilder.createCriteriaUpdate(Team.class);
+        Root<Team> root = teamDelete.from(Team.class);
+        teamDelete.where(criteriaBuilder.equal(root.get("country"), countryId));
+        teamDelete.set("isActive",isActive);
+
+        var query = session.createQuery(teamDelete);
+
+        try {
+            query.executeUpdate();
+            transection.commit();
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+
+    }
+
 }

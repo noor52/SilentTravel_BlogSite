@@ -11,7 +11,8 @@
 
 <html>
 <head>
-    <title>Add Player</title>
+
+    <jsp:include page="../includes/dobdatepicker.jsp"/>
 </head>
 <body>
     <h2>Add player page</h2>
@@ -21,7 +22,7 @@
         <form:input path="name"/></br>
 
         <label>Date of Birth</label>
-        <form:input path="dob"/></br>
+        <form:input id="dobdatepicker" path="dob"/></br>
 
         <label>Age: </label>
         <form:input path="age"/></br>

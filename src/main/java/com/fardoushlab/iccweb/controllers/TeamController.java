@@ -13,6 +13,7 @@ import com.fardoushlab.iccweb.services.CountryService;
 import com.fardoushlab.iccweb.services.PlayerService;
 import com.fardoushlab.iccweb.services.StaffService;
 import com.fardoushlab.iccweb.services.TeamService;
+import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,7 +62,7 @@ public class TeamController {
     public String addNewteam(Model model, @ModelAttribute(name = "team") Team team){
         System.out.println(team.toString());
 
-        CountryDto countryDto = countryService.getCountryDtoById(team.getCoundtryId());
+        CountryDto countryDto = countryService.getCountryDtoById(team.getCountryId());
 
         com.fardoushlab.iccweb.models.Country country = new com.fardoushlab.iccweb.models.Country();
         BeanUtils.copyProperties(countryDto,country);
@@ -197,7 +198,7 @@ public class TeamController {
     }
 
     @PostMapping("/team/team-members")
-    public String method(Model model, @RequestParam(name = "id") long countryId){
+    public String showAllTeamMember(Model model, @RequestParam(name = "id") long countryId){
 
     //    var countryDto = countryService.getCountryDtoById(countryId);
      //   var country = new Country();
@@ -205,7 +206,7 @@ public class TeamController {
         var team = new Team();
         TeamDto teamDto = teamService.getTeamByCountry(countryId);
         BeanUtils.copyProperties(teamDto,team);
-        team.setCoundtryId(teamDto.getCountry().getId());
+        team.setCountryId(teamDto.getCountry().getId());
         team.setCountryName(teamDto.getCountry().getName());
 
 
@@ -215,7 +216,8 @@ public class TeamController {
             player.setId(dto.getId());
             player.setName(dto.getUser().getName());
             player.setAge(dto.getAge());
-            player.setDob(dto.getDob());
+
+            player.setDob(Util.getStringDate(dto.getDob(),Util.DOB_DATE_FORMAT));
             player.setCountryName(dto.getCountry().getName());
             playerList.add(player);
         });
@@ -226,7 +228,7 @@ public class TeamController {
            staff.setId(dto.getId());
            staff.setName(dto.getUser().getName());
            staff.setAge(dto.getAge());
-           staff.setDob(dto.getDob());
+           staff.setDob(Util.getStringDate(dto.getDob(),Util.DOB_DATE_FORMAT));
            staff.setCountryName(dto.getCountry().getName());
             staffList.add(staff);
         });
@@ -238,11 +240,44 @@ public class TeamController {
         return "team/team-members";
     }
 
+    @GetMapping("/team/edit")
+    public String getTeamEditPage(Model model, @RequestParam("team_id") long teamId){
+
+        TeamDto dto = teamService.getTeamDtoById(teamId);
+        Team team = new Team();
+        BeanUtils.copyProperties(dto,team);
+        team.setCountryId(dto.getCountry().getId());
+        team.setCountryName(dto.getCountry().getName());
+
+        model.addAttribute("team",team);
+        return "team/edit";
+    }
+
+    @PostMapping("/team/edit")
+    public String saveEditedTeam(Model model, @ModelAttribute(name="team") Team team){
+
+        TeamDto dto = teamService.getTeamDtoById(team.getId());
+        dto.setName(team.getName());
+        teamService.saveEditedTeam(dto);
+
+        return "redirect:/team/show-all";
+    }
+
+    @GetMapping("/team/delete")
+    public String deleteTeamById(Model model, @RequestParam(name = "team_id") long teamId){
+        // MUST NEED TO DO IN ONE TRANSACTION
+        teamService.changeTeamActiveStatus(teamId,false);
+        teamService.deactiveTeamPlayers(teamId);
+        teamService.deactiveTeamStaff(teamId);
+        return "redirect:/team/show-all";
+    }
+
+
 
     /*
 
     @GetMapping("")
-    public String method(Model model){
+    public String CHANGE_METHOD_NAME_(Model model){
         return "";
     }
 

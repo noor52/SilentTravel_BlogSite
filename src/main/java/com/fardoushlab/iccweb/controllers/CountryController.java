@@ -3,6 +3,9 @@ package com.fardoushlab.iccweb.controllers;
 import com.fardoushlab.iccweb.dtos.CountryDto;
 import com.fardoushlab.iccweb.request_models.Country;
 import com.fardoushlab.iccweb.services.CountryService;
+import com.fardoushlab.iccweb.services.PlayerService;
+import com.fardoushlab.iccweb.services.StaffService;
+import com.fardoushlab.iccweb.services.TeamService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,16 @@ public class CountryController {
 
     @Autowired
     CountryService countryService;
+
+    @Autowired
+    TeamService teamService;
+
+    @Autowired
+    PlayerService playerService;
+
+    @Autowired
+    StaffService staffService;
+
 
     @GetMapping("/country/add")
     public String getAddCountryPage(){
@@ -76,7 +89,13 @@ public class CountryController {
     @GetMapping("/country/delete")
     public String deleteCountry(Model model, @RequestParam(name = "id") long countryId){
 
+        // MUST NEED TO DO THIS IN ONE TRANSACTION
         countryService.changeCountryActiveStatus(countryId,false);
+        teamService.changeCountryTeamActiveStatus(countryId,false);
+        playerService.changeCountryPlayerActiveStatus(countryId,false);
+        staffService.changeCountryCoachingStaffActiveStatus(countryId,false);
+
+
 
         return "redirect:/country/show-all";
     }

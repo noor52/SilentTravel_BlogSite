@@ -14,9 +14,9 @@
 </head>
 <body>
 
-<h2> Edit Player: s</h2>
-<form:form action="${pageContext.request.contextPath}/player/edit" method="post" modelAttribute="player">
-    <form:input type="hidden" path="id" value="${player.id}"/></br>
+<h2> Edit Coaching Staff: </h2>
+<form:form action="${pageContext.request.contextPath}/staff/edit" method="post" modelAttribute="staff">
+    <form:input type="hidden" path="id" value="${staff.id}"/></br>
     <label>Name: </label>
     <form:input path="name" readonly="true"/></br>
 
@@ -28,8 +28,7 @@
 
     <label>Country: </label>
     <form:input path="countryName"  readonly="true"/></br>
-    <form:input type="hidden" path="countryId" value ="${player.countryId}"/></br>
-
+    <form:input type="hidden" path="countryId" value ="${staff.countryId}"/></br>
 
     <input type="submit" name="submit" value="submit"/>
 </form:form>

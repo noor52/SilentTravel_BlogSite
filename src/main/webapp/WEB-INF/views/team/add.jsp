@@ -17,7 +17,7 @@
 <form:form action="${pageContext.request.contextPath}/team/add" method="post" modelAttribute="team">
     <label>Team Name: </label>
     <form:input path="name" /></br>
-    <form:select path="coundtryId" items="${country_list}" itemValue="id" itemLabel="name"/></br>
+    <form:select path="countryId" items="${country_list}" itemValue="id" itemLabel="name"/></br>
     <input type="submit" value="Add Team" name="submit">
 </form:form>
 

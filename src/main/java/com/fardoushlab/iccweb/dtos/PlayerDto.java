@@ -3,7 +3,9 @@ package com.fardoushlab.iccweb.dtos;
 import com.fardoushlab.iccweb.models.Country;
 import com.fardoushlab.iccweb.models.User;
 
+import javax.persistence.Column;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class PlayerDto implements Serializable {
 
@@ -12,7 +14,10 @@ public class PlayerDto implements Serializable {
     private boolean isActive;
 
     private long age;
-    private String dob;
+
+    @Column(name = "dob",updatable = true, nullable = false)
+    private LocalDate dob;
+
 
     private Country country;
 
@@ -22,14 +27,7 @@ public class PlayerDto implements Serializable {
     public PlayerDto() {
     }
 
-    public PlayerDto(long id, boolean isActive, long age, String dob, Country country, User user) {
-        this.id = id;
-        this.isActive = isActive;
-        this.age = age;
-        this.dob = dob;
-        this.country = country;
-        this.user = user;
-    }
+
 
     public long getId() {
         return id;
@@ -71,11 +69,12 @@ public class PlayerDto implements Serializable {
         this.age = age;
     }
 
-    public String getDob() {
+
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(String dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
@@ -85,7 +84,7 @@ public class PlayerDto implements Serializable {
                 "id=" + id +
                 ", isActive=" + isActive +
                 ", age=" + age +
-                ", dob='" + dob + '\'' +
+                ", dob=" + dob +
                 ", country=" + country +
                 ", user=" + user +
                 '}';

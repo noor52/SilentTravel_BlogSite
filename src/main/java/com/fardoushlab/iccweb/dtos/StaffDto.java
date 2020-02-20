@@ -3,6 +3,8 @@ package com.fardoushlab.iccweb.dtos;
 import com.fardoushlab.iccweb.models.Country;
 import com.fardoushlab.iccweb.models.User;
 
+import java.time.LocalDate;
+
 public class StaffDto {
 
 
@@ -12,7 +14,7 @@ public class StaffDto {
 
     private long age;
 
-    private String dob;
+    private LocalDate dob;
 
     private Country country;
 
@@ -45,11 +47,11 @@ public class StaffDto {
         this.age = age;
     }
 
-    public String getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(String dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 

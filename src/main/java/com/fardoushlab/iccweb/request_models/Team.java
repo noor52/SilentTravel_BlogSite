@@ -1,8 +1,5 @@
 package com.fardoushlab.iccweb.request_models;
 
-import com.fardoushlab.iccweb.models.Country;
-
-import javax.persistence.*;
 import java.io.Serializable;
 
 public class Team implements Serializable {
@@ -10,7 +7,7 @@ public class Team implements Serializable {
 
     private long id;
     private String name;
-    private long coundtryId;
+    private long countryId;
     private String countryName;
 
     public Team() {
@@ -20,13 +17,13 @@ public class Team implements Serializable {
         this.id = id;
         this.name = name;
 
-        this.coundtryId = coundtryId;
+        this.countryId = coundtryId;
     }
 
     public Team(long id, String name, long coundtryId, String countryName) {
         this.id = id;
         this.name = name;
-        this.coundtryId = coundtryId;
+        this.countryId = coundtryId;
         this.countryName = countryName;
     }
 
@@ -46,12 +43,12 @@ public class Team implements Serializable {
         this.name = name;
     }
 
-    public long getCoundtryId() {
-        return coundtryId;
+    public long getCountryId() {
+        return countryId;
     }
 
-    public void setCoundtryId(long coundtryId) {
-        this.coundtryId = coundtryId;
+    public void setCountryId(long countryId) {
+        this.countryId = countryId;
     }
 
     public String getCountryName() {
@@ -67,8 +64,10 @@ public class Team implements Serializable {
         return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", coundtryId=" + coundtryId +
+                ", countryId=" + countryId +
                 ", countryName='" + countryName + '\'' +
                 '}';
     }
+
+
 }
