@@ -135,7 +135,7 @@ public class StaffController {
     public String deleteStaffById(Model model, @RequestParam(name = "id") long id){
 
         staffService.changeCoachingStaffActiveStatus(id,false);
-        staffService.deactivateTeamStaff(id);
+      //  staffService.deactivateTeamStaff(id);
         return "redirect:/staff/show-all";
     }
 

@@ -61,7 +61,7 @@ public class AppController {
     @GetMapping("/login")
     public String getLoginPage(Model model, @RequestParam(name="error",required = false) Boolean error){
 
-    //    genereateUser();
+        genereateUser();
 
         model.addAttribute("error",error);
 

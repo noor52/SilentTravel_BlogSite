@@ -105,6 +105,7 @@ public class PlayerController {
         player.setCountryName(playerDto.getCountry().getName());
         player.setCountryId(playerDto.getCountry().getId());
         player.setName(playerDto.getUser().getName());
+        player.setDob(Util.getStringDate(playerDto.getDob(),Util.DOB_DATE_FORMAT));
 
 
         model.addAttribute("player",player);
@@ -128,7 +129,7 @@ public class PlayerController {
     public String deletePlayByid(Model model, @RequestParam(name = "id") long id){
 
         playerService.changePlayerActiveStatus(id,false);
-        playerService.deactivePlayerInTeam(id);
+      //  playerService.deactivePlayerInTeam(id);
 
         return "redirect:/player/show-all";
     }

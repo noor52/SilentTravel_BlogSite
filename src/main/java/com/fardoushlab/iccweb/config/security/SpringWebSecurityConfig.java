@@ -1,6 +1,7 @@
 package com.fardoushlab.iccweb.config.security;
 
 
+import com.fardoushlab.iccweb.models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,6 +40,20 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/images/**", "/css/**", "/js/**","/auth/register")
                 .permitAll()
+            .and()
+                .authorizeRequests()
+                .antMatchers("/user/add-admin").hasRole("SUPER_ADMIN")
+                .antMatchers("/country/show-all").hasAnyRole("SUPER_ADMIN","ADMIN","TEAM_MANAGER","CAPTAIN","PLAYER","COACHING_STAFF","USER")
+                .antMatchers("/country/add","/country/edit","/country/delete").hasAnyRole("SUPER_ADMIN","ADMIN")
+                .antMatchers("/team/add","/team/edit","/team/delete").hasAnyRole("SUPER_ADMIN","ADMIN")
+                .antMatchers("/team/add-team-player","/team/add-team-staff").hasAnyRole("SUPER_ADMIN","ADMIN","TEAM_MANAGER")
+                .antMatchers("/team/team-members").hasAnyRole("SUPER_ADMIN","ADMIN","TEAM_MANAGER","CAPTAIN","PLAYER","COACHING_STAFF","USER")
+                .antMatchers("/player/add").hasAnyRole("SUPER_ADMIN","ADMIN","TEAM_MANAGER")
+                .antMatchers("/player/edit").hasAnyRole("SUPER_ADMIN","ADMIN","TEAM_MANAGER","PLAYER")
+                .antMatchers("/player/delete").hasAnyRole("SUPER_ADMIN","ADMIN")
+                .antMatchers("/staff/**").hasAnyRole("SUPER_ADMIN","ADMIN")
+                .antMatchers("/staff/edit").hasAnyRole("COACHING_STAFF")
+
                 .anyRequest()
                 .authenticated()
             .and()

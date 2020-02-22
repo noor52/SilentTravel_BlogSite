@@ -5,6 +5,7 @@ import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.Entity;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,10 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@org.springframework.context.annotation.Configuration
 public class HibernateConfig {
 
     private SessionFactory sessionFactory = null;
     private Session session = null;
+
 
     public Session getSession(){
         try{
@@ -23,6 +26,7 @@ public class HibernateConfig {
 
         }catch(HibernateException e){
             e.printStackTrace();
+            System.out.println("Opening new session...");
             this.session = createAndGetLocalSessionFactoryBean().openSession();
         }
 
@@ -41,6 +45,7 @@ public class HibernateConfig {
         return session.getCriteriaBuilder();
 
     }
+
 
 
 

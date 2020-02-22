@@ -267,8 +267,8 @@ public class TeamController {
     public String deleteTeamById(Model model, @RequestParam(name = "team_id") long teamId){
         // MUST NEED TO DO IN ONE TRANSACTION
         teamService.changeTeamActiveStatus(teamId,false);
-        teamService.deactiveTeamPlayers(teamId);
-        teamService.deactiveTeamStaff(teamId);
+      //  teamService.deactiveTeamPlayers(teamId);
+      //  teamService.deactiveTeamStaff(teamId);
         return "redirect:/team/show-all";
     }
 

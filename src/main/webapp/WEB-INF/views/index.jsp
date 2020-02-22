@@ -8,37 +8,67 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<br>
+<!DOCTYPE html>
+<html>
 <head>
     <title>ICC Web</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
-<>
-
-<h2>Welcome to ICC  </h2>
-
-<a href="${pageContext.request.contextPath}/country/add">Add New Country</a>
-<a href="${pageContext.request.contextPath}/country/show-all">Show countries</a>
-</br>
-<a href="${pageContext.request.contextPath}/team/add">Add New Team</a>
-<a href="${pageContext.request.contextPath}/team/show-all">Show Teams</a>
-</br>
-
-<a href="${pageContext.request.contextPath}/player/add">Add Player</a>
-<a href="${pageContext.request.contextPath}/player/show-all">Show players</a>
-
-</br>
-
-<a href="${pageContext.request.contextPath}/staff/add">Add staff</a>
-<a href="${pageContext.request.contextPath}/staff/show-all">Show staffs</a>
-
-<h3>See Team Members</h3>
-<form:form action="${pageContext.request.contextPath}/team/team-members" method="post" modelAttribute="country">
-    <form:select path="id" items="${countryList}" itemLabel="name" itemValue="id"/>
-    <input type="submit" name="submit" value="See members"/>
-</form:form>
+<body>
 
 
-<a href="${pageContext.request.contextPath}/user/add-admin">Add Admin</a>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <%--left Menu START--%>
+            <div class="left-menu-section col-lg-2 col-md-3 col-sm-4" >
+
+                <jsp:include page="includes/homemenu.jsp"/>
+
+            </div>
+                <%--left Menu END--%>
+
+                <%--content body section START--%>
+            <div class="right-body-section col-lg-10 col-md-9 col-sm-8">
+
+                <%--nav section START--%>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <nav class="navbar navbar-light bg-light justify-content-between">
+                            <a class="navbar-brand">ICC WEB</a>
+                            <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
+                        </nav>
+                    </div>
+                </div>
+                <%--nav section END--%>
+
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card" style="margin-top: 10px">
+                            <div class="card-body">
+                                <form:form  class="form-group" action="${pageContext.request.contextPath}/team/team-members" method="post" modelAttribute="country" >
+                                    <form:select class="form-control" path="id" items="${countryList}" itemLabel="name" itemValue="id"/>
+                                    <input class="btn btn-primary float-right" type="submit" name="submit" value="See members" style="margin-top: 10px"/>
+                                </form:form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <%--footer START --%>
+                <%--footer END--%>
+            </div>
+        </div>
+        <%--content body section END--%>
+
+    </div>
+</section>
+
 
 </body>
 </html>
+
