@@ -66,8 +66,8 @@
                                         <td>${staff.age}</td>
                                         <td>${staff.dob}</td>
                                         <td>${staff.countryName}</td>
-                                        <td><a href="${pageContext.request.contextPath}/staff/edit?id=${staff.id}">Edit</a></td>
-                                        <td><a href="${pageContext.request.contextPath}/staff/delete?id=${staff.id}">Delete</a></td>
+                                        <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/staff/edit?id=${staff.id}">Edit</a></td>
+                                        <td><a calss="btn btn-danger" href="${pageContext.request.contextPath}/staff/delete?id=${staff.id}">Delete</a></td>
                                     </tr>
                                 </c:forEach>
 

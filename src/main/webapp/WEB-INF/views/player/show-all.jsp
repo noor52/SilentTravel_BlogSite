@@ -66,8 +66,8 @@
                                         <td>${player.age}</td>
                                         <td>${player.dob}</td>
                                         <td>${player.countryName}</td>
-                                        <td><a href="${pageContext.request.contextPath}/player/edit?id=${player.id}">Edit</a></td>
-                                        <td><a href="${pageContext.request.contextPath}/player/delete?id=${player.id}">Delete</a></td>
+                                        <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/player/edit?id=${player.id}">Edit</a></td>
+                                        <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/player/delete?id=${player.id}">Delete</a></td>
                                     </tr>
                                 </c:forEach>
 

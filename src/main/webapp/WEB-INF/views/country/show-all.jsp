@@ -66,8 +66,8 @@
 
                                         <tr>
                                             <td>${country.name}</td>
-                                            <td><a href="${pageContext.request.contextPath}/country/edit?id=${country.id}">Edit</a> </td>
-                                            <td><a href="${pageContext.request.contextPath}/country/delete?id=${country.id}">Delete</a></td>
+                                            <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/country/edit?id=${country.id}">Edit</a> </td>
+                                            <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/country/delete?id=${country.id}">Delete</a></td>
                                         </tr>
                                     </c:forEach>
 

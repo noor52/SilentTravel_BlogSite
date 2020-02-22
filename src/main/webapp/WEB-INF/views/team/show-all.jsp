@@ -61,10 +61,10 @@
                                     <tr>
                                         <td>${team.name}</td>
                                         <td>${team.countryName}</td>
-                                        <td><a href="${pageContext.request.contextPath}/team/add-team-player?team_id=${team.id}">Add Team Player</a></td>
-                                        <td><a href="${pageContext.request.contextPath}/team/add-team-staff?team_id=${team.id}">Add Coaching Staff</a></td>
-                                        <td><a href="${pageContext.request.contextPath}/team/edit?team_id=${team.id}">Edit</a></td>
-                                        <td><a href="${pageContext.request.contextPath}/team/delete?team_id=${team.id}">Delete</a></td>
+                                        <td><a class="btn-info" href="${pageContext.request.contextPath}/team/add-team-player?team_id=${team.id}">Add Team Player</a></td>
+                                        <td><a class="btn-info" href="${pageContext.request.contextPath}/team/add-team-staff?team_id=${team.id}">Add Coaching Staff</a></td>
+                                        <td><a class="btn-warning" href="${pageContext.request.contextPath}/team/edit?team_id=${team.id}">Edit</a></td>
+                                        <td><a class="btn-danger" href="${pageContext.request.contextPath}/team/delete?team_id=${team.id}">Delete</a></td>
 
                                     </tr>
                                 </c:forEach>
