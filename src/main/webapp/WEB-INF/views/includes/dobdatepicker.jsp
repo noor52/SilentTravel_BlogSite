@@ -15,6 +15,7 @@
     <script>
         $( function() {
             $( "#dobdatepicker" ).datepicker({
+                maxDate: "-17y",
                 dateFormat : "dd/mm/yy"
             });
         } );

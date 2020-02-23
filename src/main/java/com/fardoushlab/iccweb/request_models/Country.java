@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Country implements Serializable {
     private long id;
+
     private String name;
     private boolean isActive;
 
