@@ -15,6 +15,9 @@
     <title>Player list</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <script src="${pageContext.request.contextPath }/js/jquery.js"></script>
+    <script src="${pageContext.request.contextPath }/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
@@ -78,6 +81,46 @@
                     </div>
                 </div>
 
+                </br>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">Search player by name</div>
+                            <form:form  class="form-control form-group"  action="${pageContext.request.contextPath}/player/search" method="GET">
+
+                                <div class="row">
+                                    <div class="col-sm-12 form-group">
+                                        <label for="search_name">Player name</label>
+                                        <input id="search_name" type="text" class="form-control player_query"  placeholder="Player name">
+                                    </div>
+                                    <div class="btn btn-primary player_query_submit float-right">Search</div>
+                                </div>
+                            </form:form>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Id </th>
+                                <th>Name</th>
+                                <th>Country</th>
+                            </tr>
+                            </thead>
+                            <tbody class="search_result">
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
 
 
                 <%--footer START --%>
@@ -88,6 +131,42 @@
 
     </div>
 </section>
+
+<script>
+    $(document).ready(function () {
+        $(".player_query_submit").click(function () {
+            var playername = $(".player_query").val();
+
+            console.info(playername);
+
+            $.get("/api/v1/player/search?playername="+playername, function (data) {
+                var searchContainer = $(".search_result");
+                searchContainer.html("");
+
+                debugger;
+                if (data.length > 0){
+
+                    $.each(data,function (index, value){
+
+                        var tableRow = "<tr>\n " +
+                            "<td class='player_id'>"+value.id+"</td>" +
+                            "<td class='player_name'>"+value.name+"</td>" +
+                            "<td class='player_country'>"+value.countryName+"</td>" +
+                            " \n</tr>";
+                        searchContainer.append(tableRow);
+
+                    });
+
+
+                } else {
+                    searchContainer.html("<th>Sorry, no player found!</th>")
+                }
+
+            });
+
+        });
+    });
+</script>
 
 
 </body>

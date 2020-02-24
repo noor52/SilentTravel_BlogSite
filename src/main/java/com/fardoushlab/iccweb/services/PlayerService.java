@@ -372,5 +372,55 @@ public class PlayerService {
     }
 
 
+    public List<PlayerDto> searchPlayerByName(String playerName) {
 
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Player> playerCriteriaQuery = cb.createQuery(Player.class);
+        Root<Player> root = playerCriteriaQuery.from(Player.class);
+
+        Subquery<Long> sq = playerCriteriaQuery.subquery(Long.class);
+        Root<User> tproot = sq.from(User.class);
+        sq.where(cb.like(tproot.get("name"), "%"+playerName+"%"));
+        sq.select(tproot.get("id"));
+
+        playerCriteriaQuery.where(root.get("user").in(sq));
+
+
+
+        var query = session.createQuery(playerCriteriaQuery);
+
+        var playerList = new ArrayList<Player>();
+        try {
+            playerList = (ArrayList<Player>) query.getResultList();
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+        var playerListDto = new ArrayList<PlayerDto>();
+
+        playerList.forEach(player->{
+            var dto = new PlayerDto();
+            BeanUtils.copyProperties(player,dto);
+            playerListDto.add(dto);
+
+
+           System.out.println(dto.toString());
+
+        });
+
+        System.out.println("total list: "+playerListDto.size());
+
+        return playerListDto;
+
+    }
 }
