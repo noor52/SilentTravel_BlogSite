@@ -5,7 +5,9 @@ import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 
 import javax.persistence.Entity;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,11 +18,14 @@ import java.util.Properties;
 @org.springframework.context.annotation.Configuration
 public class HibernateConfig {
 
+    @Autowired
+    private Environment environment;
     private SessionFactory sessionFactory = null;
     private Session session = null;
 
 
     public Session getSession(){
+
         try{
             this.session = createAndGetLocalSessionFactoryBean().getCurrentSession();
 
@@ -55,7 +60,7 @@ public class HibernateConfig {
 
             try {
                 Configuration configuration = new Configuration();
-                Properties settings = getProperties("hibernate.properties");
+                Properties settings = getProperties("hibernate-"+environment.getActiveProfiles()[0]+".properties");
                 configuration.setProperties(settings);
                 configuration.addPackage("com.fardoushlab.iccweb.models");
 

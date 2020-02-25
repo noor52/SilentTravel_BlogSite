@@ -15,6 +15,9 @@
 <div class="row">
 <div class="col-sm-12 left-menu">
     <ul class="list-group">
+        <li class="list-group-item">
+            <a href="${pageContext.request.contextPath}/index">Dashboard</a>
+        </li>
         <li class="list-group-item" >
             <a>Country</a>
 

@@ -87,16 +87,17 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Search player by name</div>
-                            <form:form  class="form-control form-group"  action="${pageContext.request.contextPath}/player/search" method="GET">
+                                <form:form  class="form-control form-group"  action="${pageContext.request.contextPath}/player/search" method="GET">
 
-                                <div class="row">
-                                    <div class="col-sm-12 form-group">
-                                        <label for="search_name">Player name</label>
-                                        <input id="search_name" type="text" class="form-control player_query"  placeholder="Player name">
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label for="search_name">Player name</label>
+                                            <input id="search_name" type="text" class="form-control player_query"  placeholder="Player name">
+                                        </div>
+                                        <a class="btn btn-primary float-right player_query_submit ">Search</a>
                                     </div>
-                                    <div class="btn btn-primary player_query_submit float-right">Search</div>
-                                </div>
-                            </form:form>
+                                </form:form>
+
                         </div>
 
                     </div>

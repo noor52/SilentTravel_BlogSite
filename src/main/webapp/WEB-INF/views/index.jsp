@@ -42,6 +42,13 @@
                     </div>
                 </div>
                 <%--nav section END--%>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2 style="margin-left: auto">Dashboard</h2>
+                    </div>
+
+                </div>
+
 
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">

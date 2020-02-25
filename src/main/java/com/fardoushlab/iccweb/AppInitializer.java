@@ -1,5 +1,7 @@
 package com.fardoushlab.iccweb;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -16,6 +18,7 @@ public class AppInitializer implements WebApplicationInitializer {
 
         AnnotationConfigWebApplicationContext ac = new AnnotationConfigWebApplicationContext();
         ac.register(AppConfig.class);
+        ac.getEnvironment().setActiveProfiles("dev");
         ac.refresh();
 
         servletContext.addListener(new ContextLoaderListener(ac));
