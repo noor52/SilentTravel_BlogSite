@@ -128,7 +128,7 @@ public class CountryService {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Country> countryCriteriaQuery = cb.createQuery(Country.class);
         Root<Country> root = countryCriteriaQuery.from(Country.class);
-        countryCriteriaQuery.where(cb.equal(root.get("isActive"),1));
+        countryCriteriaQuery.where(cb.isTrue(root.get("isActive")));
 
         var query = session.createQuery(countryCriteriaQuery);
 

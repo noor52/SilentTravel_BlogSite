@@ -159,7 +159,7 @@ public class TeamService {
         CriteriaQuery<Team> teamCriteriaQuery = cb.createQuery(Team.class);
         Root<Team> root = teamCriteriaQuery.from(Team.class);
 
-        teamCriteriaQuery.where(cb.equal(root.get("isActive"),true));
+        teamCriteriaQuery.where(cb.isTrue(root.get("isActive")));
         var query = session.createQuery(teamCriteriaQuery);
 
         var teamList = new ArrayList<TeamDto>();

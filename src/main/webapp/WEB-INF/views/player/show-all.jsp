@@ -9,6 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,8 +70,12 @@
                                         <td>${player.age}</td>
                                         <td>${player.dob}</td>
                                         <td>${player.countryName}</td>
-                                        <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/player/edit?id=${player.id}">Edit</a></td>
-                                        <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/player/delete?id=${player.id}">Delete</a></td>
+                                        <sec:authorize access="hasAnyRole('SUPER_ADMIN','TEAM_MANAGER','PLAYER')">
+                                            <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/player/edit?id=${player.id}">Edit</a></td>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('SUPER_ADMIN','TEAM_MANAGER')">
+                                            <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/player/delete?id=${player.id}">Delete</a></td>
+                                        </sec:authorize>
                                     </tr>
                                 </c:forEach>
 

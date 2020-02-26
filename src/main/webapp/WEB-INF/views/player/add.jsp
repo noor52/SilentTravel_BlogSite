@@ -48,13 +48,13 @@
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card" style="margin-top: 10px">
                             <div class="card-body">
-                                <h5 class="card-title">Add Student information</h5>
+                                <h5 class="card-title">Add Player information</h5>
                                 <form:form  class="form-group" action="${pageContext.request.contextPath}/player/add" modelAttribute="player" >
 
                                     <div class="row">
                                         <div class="col-sm-12 form-group">
-                                            <label for="student_name">Name: </label>
-                                            <form:input id="student_name" class="form-control" path="name"/>
+                                            <label for="player_name">Name: </label>
+                                            <form:input id="player_name" class="form-control" path="name"/>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -65,15 +65,15 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12 form-group">
-                                            <label for="student_age">Age: </label>
-                                            <form:input id="student_age" class="form-control" path="age"/>
+                                            <label for="player_age">Age: </label>
+                                            <form:input id="player_age" class="form-control" path="age"/>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-sm-12 form-group">
-                                            <label for="student_country">Country</label>
-                                            <form:select id="student_country"  class="form-control" path="countryId" items="${country_list}" itemValue="id" itemLabel="name"/>
+                                            <label for="player_country">Country</label>
+                                            <form:select id="player_country"  class="form-control" path="countryId" items="${country_list}" itemValue="id" itemLabel="name"/>
                                         </div>
                                     </div>
 

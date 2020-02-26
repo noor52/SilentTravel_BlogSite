@@ -15,6 +15,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,8 +67,11 @@
 
                                         <tr>
                                             <td>${country.name}</td>
-                                            <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/country/edit?id=${country.id}">Edit</a> </td>
-                                            <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/country/delete?id=${country.id}">Delete</a></td>
+                                            <sec:authorize access="hasAnyRole('SUPER_ADMIN','ADMIN')">
+                                                <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/country/edit?id=${country.id}">Edit</a> </td>
+                                                <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/country/delete?id=${country.id}">Delete</a></td>
+                                            </sec:authorize>
+
                                         </tr>
                                     </c:forEach>
 

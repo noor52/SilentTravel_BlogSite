@@ -18,7 +18,7 @@ public class AppInitializer implements WebApplicationInitializer {
 
         AnnotationConfigWebApplicationContext ac = new AnnotationConfigWebApplicationContext();
         ac.register(AppConfig.class);
-        ac.getEnvironment().setActiveProfiles("dev");
+        ac.getEnvironment().setActiveProfiles("prod");
         ac.refresh();
 
         servletContext.addListener(new ContextLoaderListener(ac));
