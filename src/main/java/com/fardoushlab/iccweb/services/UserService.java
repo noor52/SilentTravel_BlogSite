@@ -1,9 +1,12 @@
 package com.fardoushlab.iccweb.services;
 
 import com.fardoushlab.iccweb.config.persistancy.HibernateConfig;
+import com.fardoushlab.iccweb.dtos.UserDto;
+import com.fardoushlab.iccweb.exceptions.ResourceNotFoundException;
 import com.fardoushlab.iccweb.models.Country;
 import com.fardoushlab.iccweb.models.User;
 import org.hibernate.HibernateException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -126,5 +130,71 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public UserDto getUserDtoByName(String userName){
 
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<User> userCriteriaQuery = cb.createQuery(User.class);
+        Root<User> root = userCriteriaQuery.from(User.class);
+
+        userCriteriaQuery.where(cb.equal(root.get("name"), userName));
+        var query = session.createQuery(userCriteriaQuery);
+
+        var userList = new ArrayList<User>();
+        try {
+            userList = (ArrayList<User>) query.getResultList();
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        var userDto = new UserDto();
+        if (userList.size() > 0){
+
+            BeanUtils.copyProperties(userList.get(0),userDto);
+        }else {
+            throw new ResourceNotFoundException("No user found");
+        }
+
+        return userDto;
+    }
+
+
+    @Transactional
+    public void updateuserProfilePicture(String name, String path) {
+        var session = hibernateConfig.getSession();
+        var transection = session.beginTransaction();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<User> tpquery = criteriaBuilder.createCriteriaUpdate(User.class);
+        Root<User> root = tpquery.from(User.class);
+        tpquery.where(criteriaBuilder.equal(root.get("name"), name));
+        tpquery.set("profilePictureUrl",path);
+
+        var query = session.createQuery(tpquery);
+
+        try {
+            int updatevalue = query.executeUpdate();
+            transection.commit();
+
+            System.out.println("update value: "+updatevalue);
+
+        }catch(HibernateException e) {
+
+            if(transection!= null ) {
+                transection.rollback();
+            }
+            e.printStackTrace();
+
+        }finally {
+            session.close();
+        }
+
+    }
 }

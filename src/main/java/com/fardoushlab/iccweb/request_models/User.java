@@ -18,18 +18,12 @@ public class User implements Serializable {
 
     private String resignDate;
 
+    private String profilePictureUrl;
+
     public User() {
     }
 
-    public User(long id, String name, String role, String password, Boolean isActive, String joinDate, String resignDate) {
-        this.id = id;
-        this.name = name;
-        this.role = role;
-        this.password = password;
-        this.isActive = isActive;
-        this.joinDate = joinDate;
-        this.resignDate = resignDate;
-    }
+
 
     public long getId() {
         return id;
@@ -85,5 +79,13 @@ public class User implements Serializable {
 
     public void setResignDate(String resignDate) {
         this.resignDate = resignDate;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }

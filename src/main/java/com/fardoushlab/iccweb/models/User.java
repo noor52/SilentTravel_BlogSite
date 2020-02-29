@@ -36,6 +36,9 @@ public class User implements Serializable {
     @Column(name = "resignDate", updatable = true, nullable = true)
     private String resignDate;
 
+    @Column(name = "pp_url")
+    private String profilePictureUrl;
+
     public User() {
 
     }
@@ -110,5 +113,13 @@ public class User implements Serializable {
 
     public void setResignDate(String resignDate) {
         this.resignDate = resignDate;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }

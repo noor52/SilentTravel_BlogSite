@@ -2,15 +2,18 @@ package com.fardoushlab.iccweb.controllers;
 
 
 import com.fardoushlab.iccweb.dtos.StaffDto;
+import com.fardoushlab.iccweb.dtos.UserDto;
 import com.fardoushlab.iccweb.models.Role;
 import com.fardoushlab.iccweb.models.User;
 import com.fardoushlab.iccweb.request_models.Country;
 import com.fardoushlab.iccweb.request_models.Staff;
 import com.fardoushlab.iccweb.services.CountryService;
 import com.fardoushlab.iccweb.services.StaffService;
+import com.fardoushlab.iccweb.services.UserService;
 import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +35,26 @@ public class StaffController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    UserService userService;
+
+
+    private com.fardoushlab.iccweb.request_models.User getCurrentUser(Authentication authentication){
+        UserDto userDto = userService.getUserDtoByName(authentication.getName());
+
+        com.fardoushlab.iccweb.request_models.User user = new com.fardoushlab.iccweb.request_models.User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setRole(Util.getStringRole(userDto.getRole()));
+        user.setProfilePictureUrl(userDto.getProfilePictureUrl());
+
+        return user;
+    }
+
+
 
     @GetMapping("/staff/add")
-    public String getStaffAddPage(Model model){
+    public String getStaffAddPage(Model model, Authentication authentication){
 
         var countryList = new ArrayList<Country>();
         countryService.getAllCountry().forEach(country->{
@@ -47,6 +67,7 @@ public class StaffController {
         roleList.add("TEAM_MANAGER");
         roleList.add("COACHING_STAFF");
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("staff", new Staff());
         model.addAttribute("role_list",roleList);
         model.addAttribute("country_list",countryList);
@@ -84,7 +105,7 @@ public class StaffController {
     }
 
     @GetMapping("/staff/show-all")
-    public String getAllStaffShowPage(Model model){
+    public String getAllStaffShowPage(Model model, Authentication authentication){
 
         var staffList = new ArrayList<Staff>();
 
@@ -99,13 +120,14 @@ public class StaffController {
 
         });
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("staff_list",staffList);
         return "staff/show-all";
     }
 
 
     @GetMapping("/staff/edit")
-    public String getStaffEditPage(Model model, @RequestParam(name = "id") long id){
+    public String getStaffEditPage(Model model, @RequestParam(name = "id") long id, Authentication authentication){
         var staffDto = staffService.getCoachingStaffById(id);
         var staff = new Staff();
         BeanUtils.copyProperties(staffDto,staff);
@@ -115,6 +137,7 @@ public class StaffController {
         staff.setName(staffDto.getUser().getName());
 
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("staff",staff);
         return "staff/edit";
     }

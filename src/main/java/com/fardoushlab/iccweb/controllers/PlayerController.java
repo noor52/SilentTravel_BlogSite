@@ -1,15 +1,18 @@
 package com.fardoushlab.iccweb.controllers;
 
 import com.fardoushlab.iccweb.dtos.PlayerDto;
+import com.fardoushlab.iccweb.dtos.UserDto;
 import com.fardoushlab.iccweb.models.Role;
 import com.fardoushlab.iccweb.models.User;
 import com.fardoushlab.iccweb.request_models.Country;
 import com.fardoushlab.iccweb.request_models.Player;
 import com.fardoushlab.iccweb.services.CountryService;
 import com.fardoushlab.iccweb.services.PlayerService;
+import com.fardoushlab.iccweb.services.UserService;
 import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,8 +37,24 @@ public class PlayerController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    UserService userService;
+
+
+    private com.fardoushlab.iccweb.request_models.User getCurrentUser(Authentication authentication){
+        UserDto userDto = userService.getUserDtoByName(authentication.getName());
+
+        com.fardoushlab.iccweb.request_models.User user = new com.fardoushlab.iccweb.request_models.User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setRole(Util.getStringRole(userDto.getRole()));
+        user.setProfilePictureUrl(userDto.getProfilePictureUrl());
+
+        return user;
+    }
+
     @GetMapping("/player/add")
-    public String getPlayerAddPage(Model model){
+    public String getPlayerAddPage(Model model, Authentication authentication){
 
         var countryList = new ArrayList<Country>();
         countryService.getAllCountry().forEach(country->{
@@ -44,6 +63,8 @@ public class PlayerController {
             countryList.add(countryRm);
 
         });
+
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("player", new Player());
         model.addAttribute("country_list",countryList);
 
@@ -78,7 +99,7 @@ public class PlayerController {
     }
 
     @GetMapping("/player/show-all")
-    public String showAllPlayer(Model model){
+    public String showAllPlayer(Model model, Authentication authentication){
 
         var playerList = new ArrayList<Player>();
 
@@ -93,12 +114,13 @@ public class PlayerController {
 
         });
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("player_list",playerList);
         return "player/show-all";
     }
 
     @GetMapping("/player/edit")
-    public String getPlayerEditPage(Model model, @RequestParam(name = "id") long id){
+    public String getPlayerEditPage(Model model, @RequestParam(name = "id") long id, Authentication authentication){
         var playerDto = playerService.getPlayerById(id);
         var player = new Player();
         BeanUtils.copyProperties(playerDto,player);
@@ -108,6 +130,7 @@ public class PlayerController {
         player.setDob(Util.getStringDate(playerDto.getDob(),Util.DOB_DATE_FORMAT));
 
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("player",player);
         return "player/edit";
     }

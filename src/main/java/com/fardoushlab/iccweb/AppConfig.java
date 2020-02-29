@@ -7,12 +7,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @Configuration
 @ComponentScan(basePackages = {"com.fardoushlab.iccweb.config.security",
         "com.fardoushlab.iccweb.config.persistancy",
         "com.fardoushlab.iccweb.services" })
 public class AppConfig {
+
+
+    @Bean
+    public StandardServletMultipartResolver multipartResolver(){
+        return new StandardServletMultipartResolver();
+    }
 
     @Bean
     public HibernateConfig getHibernateConfig(){

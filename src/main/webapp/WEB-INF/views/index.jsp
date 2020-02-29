@@ -8,12 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>ICC Web</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profile.css">
 </head>
 <body>
 
@@ -37,7 +39,7 @@
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
                             <a class="navbar-brand">ICC WEB</a>
-                            <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
+                            <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary float-right">Logout</a>
                         </nav>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ public class UserDto implements Serializable {
 
     private Role role;
 
-    private String password;
+
 
     private Boolean isActive;
 
@@ -20,15 +20,16 @@ public class UserDto implements Serializable {
 
     private String resignDate;
 
+    private String profilePictureUrl;
+
     public UserDto() {
 
     }
 
-    public UserDto(long id, String name, Role role, String password, Boolean isActive, String joinDate, String resignDate) {
+    public UserDto(long id, String name, Role role,  Boolean isActive, String joinDate, String resignDate) {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.password = password;
         this.isActive = isActive;
         this.joinDate = joinDate;
         this.resignDate = resignDate;
@@ -58,13 +59,6 @@ public class UserDto implements Serializable {
         this.role = role;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public Boolean getActive() {
         return isActive;
@@ -88,5 +82,14 @@ public class UserDto implements Serializable {
 
     public void setResignDate(String resignDate) {
         this.resignDate = resignDate;
+    }
+
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }

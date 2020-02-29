@@ -12,6 +12,49 @@
         <h4>ICC WEB</h4>
     </div>
 </div>
+<%--START profile section--%>
+<div class="row profile">
+    <div class="col-sm-12">
+        <div class="profile-userpic">
+            <a href="${pageContext.request.contextPath}/user/profile">
+                <img src="${user.profilePictureUrl}" class="img-responsive align-self-center" alt="">
+            </a>
+        </div>
+        <div class="profile-usertitle">
+            <div class="profile-usertitle-name">
+                 <sec:authorize access="isAuthenticated()">
+                    <sec:authentication property="principal.username" />
+                </sec:authorize>
+            </div>
+            <div class="profile-usertitle-job">
+
+               <sec:authorize access="hasRole('SUPER_ADMIN')">
+                 SUPER ADMIN
+               </sec:authorize>
+                <sec:authorize access="hasRole('ADMIN')">
+                    ADMIN
+                </sec:authorize>
+                <sec:authorize access="hasRole('TEAM_MANAGER')">
+                    TEAM_MANAGER
+                </sec:authorize>
+                <sec:authorize access="hasRole('CAPTAIN')">
+                    CAPTAIN
+                </sec:authorize>
+                <sec:authorize access="hasRole('COACHING_STAFF')">
+                    COACHING STAFF
+                </sec:authorize>
+                <sec:authorize access="hasRole('USER')">
+                    USER
+                </sec:authorize>
+
+            </div>
+        </div>
+    </div>
+</div>
+<%--END profile section--%>
+
+
+ <%--Menu section--%>
 <div class="row">
 <div class="col-sm-12 left-menu">
     <ul class="list-group">

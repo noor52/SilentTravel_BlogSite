@@ -15,6 +15,7 @@
     <title>Edit staff</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profile.css">
     <jsp:include page="../includes/dobdatepicker.jsp"/>
 </head>
 <body>

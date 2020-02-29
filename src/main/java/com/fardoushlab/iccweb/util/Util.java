@@ -1,5 +1,7 @@
 package com.fardoushlab.iccweb.util;
 
+import com.fardoushlab.iccweb.models.Role;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,5 +29,33 @@ public class Util {
 
 
 
+    }
+
+    public static String getStringRole(Role role){
+        String strRole = "";
+        switch (role){
+            case ROLE_SUPER_ADMIN:
+                strRole = "SUPER ADMIN";
+                break;
+            case ROLE_ADMIN:
+                strRole = "ADMIN";
+                break;
+            case ROLE_TEAM_MANAGER:
+                strRole = "TEAM MANAGER";
+                break;
+            case ROLE_COACHING_STAFF:
+                strRole = "COACHING STAFF";
+                break;
+            case ROLE_CAPTAIN:
+                strRole = "CAPTAIN";
+                break;
+            case ROLE_PLAYER:
+                strRole = "PLAYER";
+                break;
+            case ROLE_USER:
+                strRole = "USER";
+                break;
+        }
+        return strRole;
     }
 }

@@ -6,8 +6,10 @@ import com.fardoushlab.iccweb.models.User;
 import com.fardoushlab.iccweb.request_models.Country;
 import com.fardoushlab.iccweb.services.CountryService;
 import com.fardoushlab.iccweb.services.UserService;
+import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -36,14 +39,17 @@ public class AppController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
     @GetMapping("/")
     public String getHomePage(Model model){
 
         return "redirect:/index";
     }
 
+
+
     @GetMapping("/index")
-    public String getIndexPage(Model model){
+    public String getIndexPage(Model model, Authentication auth){
 
         var countryList = new ArrayList<Country>();
         countryService.getAllCountry().forEach(country->{
@@ -52,6 +58,16 @@ public class AppController {
             countryList.add(countryRm);
 
         });
+
+        UserDto userDto = userService.getUserDtoByName(auth.getName());
+        com.fardoushlab.iccweb.request_models.User user = new com.fardoushlab.iccweb.request_models.User();
+
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setRole(Util.getStringRole(userDto.getRole()));
+        user.setProfilePictureUrl(userDto.getProfilePictureUrl());
+
+        model.addAttribute("user",user);
         model.addAttribute("country", new Country());
         model.addAttribute("countryList",countryList);
 
@@ -76,6 +92,7 @@ public class AppController {
             superUser.setPassword(passwordEncoder.encode("asecret"));
             superUser.setActive(true);
             superUser.setRole(Role.ROLE_SUPER_ADMIN);
+            superUser.setProfilePictureUrl("/profile/images/default_profile.jpg");
             userService.saveUser(superUser);
         }
 
@@ -92,15 +109,6 @@ public class AppController {
 
 
         return "auth/register";
-    }
-
-    @PostMapping("/auth/register")
-    public String registerUser(Model model, @ModelAttribute(name = "user")com.fardoushlab.iccweb.request_models.User user){
-
-        var userDto = new UserDto();
-        userDto.setName(user.getName());
-        userDto.setPassword(passwordEncoder.encode(user.getPassword()));
-        return "";
     }
 
     @GetMapping("/403")

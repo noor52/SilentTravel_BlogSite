@@ -1,21 +1,17 @@
 package com.fardoushlab.iccweb.controllers;
 
+import com.fardoushlab.iccweb.dtos.UserDto;
 import com.fardoushlab.iccweb.models.TeamStaff;
-import com.fardoushlab.iccweb.request_models.Staff;
+import com.fardoushlab.iccweb.request_models.*;
 import com.fardoushlab.iccweb.response_model.LongIdListObject;
 import com.fardoushlab.iccweb.dtos.CountryDto;
 import com.fardoushlab.iccweb.dtos.TeamDto;
 import com.fardoushlab.iccweb.models.TeamPlayer;
-import com.fardoushlab.iccweb.request_models.Country;
-import com.fardoushlab.iccweb.request_models.Player;
-import com.fardoushlab.iccweb.request_models.Team;
-import com.fardoushlab.iccweb.services.CountryService;
-import com.fardoushlab.iccweb.services.PlayerService;
-import com.fardoushlab.iccweb.services.StaffService;
-import com.fardoushlab.iccweb.services.TeamService;
+import com.fardoushlab.iccweb.services.*;
 import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +37,25 @@ public class TeamController {
     @Autowired
     StaffService staffService;
 
+    @Autowired
+    UserService userService;
+
+
+    private User getCurrentUser(Authentication authentication){
+        UserDto userDto = userService.getUserDtoByName(authentication.getName());
+
+        com.fardoushlab.iccweb.request_models.User user = new com.fardoushlab.iccweb.request_models.User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setRole(Util.getStringRole(userDto.getRole()));
+        user.setProfilePictureUrl(userDto.getProfilePictureUrl());
+
+        return user;
+    }
+
 
     @GetMapping("/team/add")
-    public String getTeamAddPage(Model model){
+    public String getTeamAddPage(Model model, Authentication authentication){
 
         var countryList = new ArrayList<Country>();
         countryService.getAllCountry().forEach(country->{
@@ -52,6 +64,8 @@ public class TeamController {
             countryList.add(countryRm);
 
         });
+
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("team", new Team());
         model.addAttribute("country_list",countryList);
 
@@ -78,7 +92,7 @@ public class TeamController {
     }
 
     @GetMapping("/team/show-all")
-    public String getTeamShowAllPage(Model model){
+    public String getTeamShowAllPage(Model model, Authentication authentication){
 
         var teamList = new ArrayList<Team>();
        teamService.getAllTeam().forEach(teamDto -> {
@@ -88,13 +102,14 @@ public class TeamController {
            teamList.add(team);
        });
 
+        model.addAttribute("user",getCurrentUser(authentication));
        model.addAttribute("team_list",teamList);
 
         return "team/show-all";
     }
 
     @GetMapping("/team/add-team-player")
-    public String getTeamPlayerAddPage(Model model, @RequestParam(name = "team_id") long team_id){
+    public String getTeamPlayerAddPage(Model model, @RequestParam(name = "team_id") long team_id, Authentication authentication){
 
         var teamDto = teamService.getTeamDtoById(team_id);
         var team = new Team();
@@ -110,6 +125,7 @@ public class TeamController {
                      players.add(player);
                  });
 
+        model.addAttribute("user",getCurrentUser(authentication));
          model.addAttribute("team",team);
          model.addAttribute("players",players);
          model.addAttribute("idList",new LongIdListObject());
@@ -146,7 +162,7 @@ public class TeamController {
     }
 
     @GetMapping("/team/add-team-staff")
-    public String getAddTeamStaffPage(Model model, @RequestParam(name = "team_id") long team_id){
+    public String getAddTeamStaffPage(Model model, @RequestParam(name = "team_id") long team_id, Authentication authentication){
 
         var teamDto = teamService.getTeamDtoById(team_id);
         var team = new Team();
@@ -162,6 +178,7 @@ public class TeamController {
                     staffs.add(Staff);
                 });
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("team",team);
         model.addAttribute("staffs",staffs);
         model.addAttribute("idList",new LongIdListObject());
@@ -198,7 +215,7 @@ public class TeamController {
     }
 
     @PostMapping("/team/team-members")
-    public String showAllTeamMember(Model model, @RequestParam(name = "id") long countryId){
+    public String showAllTeamMember(Model model, @RequestParam(name = "id") long countryId, Authentication authentication){
 
     //    var countryDto = countryService.getCountryDtoById(countryId);
      //   var country = new Country();
@@ -233,6 +250,7 @@ public class TeamController {
             staffList.add(staff);
         });
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("team",team);
         model.addAttribute("players",playerList);
         model.addAttribute("staffs",staffList);
@@ -241,7 +259,7 @@ public class TeamController {
     }
 
     @GetMapping("/team/edit")
-    public String getTeamEditPage(Model model, @RequestParam("team_id") long teamId){
+    public String getTeamEditPage(Model model, @RequestParam("team_id") long teamId, Authentication authentication){
 
         TeamDto dto = teamService.getTeamDtoById(teamId);
         Team team = new Team();
@@ -249,6 +267,7 @@ public class TeamController {
         team.setCountryId(dto.getCountry().getId());
         team.setCountryName(dto.getCountry().getName());
 
+        model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("team",team);
         return "team/edit";
     }

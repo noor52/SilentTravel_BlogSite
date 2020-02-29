@@ -314,6 +314,7 @@ public class PlayerService {
 
     }
 
+    @Transactional
     public void deactivePlayerInTeam(long playerId){
         var session = hibernateConfig.getSession();
         var transection = session.beginTransaction();
