@@ -424,4 +424,60 @@ public class PlayerService {
         return playerListDto;
 
     }
+
+    public Long countTotalPlayer(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> playerCriteriaQuery = cb.createQuery(Long.class);
+        Root<Player> root = playerCriteriaQuery.from(Player.class);
+        playerCriteriaQuery.select(cb.count(root.get("id")));
+
+
+        var query = session.createQuery(playerCriteriaQuery);
+
+        Long totalPlayer = Long.valueOf(0);
+        try {
+            totalPlayer =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return totalPlayer;
+    }
+
+    public Long countActivePlayer(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> playerCriteriaQuery = cb.createQuery(Long.class);
+        Root<Player> root = playerCriteriaQuery.from(Player.class);
+        playerCriteriaQuery.select(cb.count(root.get("id")));
+        playerCriteriaQuery.where(cb.isTrue(root.get("isActive")));
+
+        var query = session.createQuery(playerCriteriaQuery);
+
+        Long activePlayer = Long.valueOf(0);
+        try {
+            activePlayer =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return activePlayer;
+    }
 }

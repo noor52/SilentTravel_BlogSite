@@ -197,4 +197,62 @@ public class UserService implements UserDetailsService {
         }
 
     }
+
+
+    public Long countTotalUser(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> userCriteriaQuery = cb.createQuery(Long.class);
+        Root<User> root = userCriteriaQuery.from(User.class);
+        userCriteriaQuery.select(cb.count(root.get("id")));
+
+
+        var query = session.createQuery(userCriteriaQuery);
+
+        Long totalUser = Long.valueOf(0);
+        try {
+            totalUser =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return totalUser;
+    }
+
+    public Long countActiveUser(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> userCriteriaQuery = cb.createQuery(Long.class);
+        Root<User> root = userCriteriaQuery.from(User.class);
+        userCriteriaQuery.select(cb.count(root.get("id")));
+        userCriteriaQuery.where(cb.isTrue(root.get("isActive")));
+
+
+        var query = session.createQuery(userCriteriaQuery);
+
+        Long activeUser = Long.valueOf(0);
+        try {
+            activeUser =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return activeUser;
+    }
 }

@@ -4,8 +4,8 @@ import com.fardoushlab.iccweb.dtos.UserDto;
 import com.fardoushlab.iccweb.models.Role;
 import com.fardoushlab.iccweb.models.User;
 import com.fardoushlab.iccweb.request_models.Country;
-import com.fardoushlab.iccweb.services.CountryService;
-import com.fardoushlab.iccweb.services.UserService;
+import com.fardoushlab.iccweb.request_models.Stat;
+import com.fardoushlab.iccweb.services.*;
 import com.fardoushlab.iccweb.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,15 @@ public class AppController {
     CountryService countryService;
 
     @Autowired
+    TeamService teamService;
+
+    @Autowired
+    PlayerService playerService;
+
+    @Autowired
+    StaffService staffService;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
 
@@ -47,6 +56,39 @@ public class AppController {
     }
 
 
+    private com.fardoushlab.iccweb.request_models.User getCurrentUser(Authentication authentication){
+        UserDto userDto = userService.getUserDtoByName(authentication.getName());
+
+        com.fardoushlab.iccweb.request_models.User user = new com.fardoushlab.iccweb.request_models.User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setRole(Util.getStringRole(userDto.getRole()));
+        user.setProfilePictureUrl(userDto.getProfilePictureUrl());
+
+        return user;
+    }
+
+    private Stat getStats(){
+        Stat stat = new Stat();
+        stat.setTotalCountry(countryService.countTotalcountry());
+        stat.setActiveCountry(countryService.countActivecountry());
+        stat.setInActiveCountry(stat.getTotalCountry() - stat.getActiveCountry());
+        stat.setTotalTeam(teamService.countTotalTeam());
+        stat.setActiveTeam(teamService.countActiveTeam());
+        stat.setInactiveTeam(stat.getTotalTeam() - stat.getActiveTeam());
+        stat.setTotalCoach(staffService.countTotalStaff() );
+        stat.setActiveCoach(staffService.countActiveStaff());
+        stat.setInActiveCoach(stat.getTotalCoach() - stat.getActiveCoach());
+        stat.setTotalPlayer(playerService.countTotalPlayer());
+        stat.setActivePlayer(playerService.countActivePlayer());
+        stat.setInActivePlayer(stat.getTotalPlayer() - stat.getActivePlayer());
+        stat.setTotalUser(userService.countTotalUser());
+        stat.setActiveUser(userService.countActiveUser());
+        stat.setInActiveUser(stat.getTotalUser() - stat.getActiveUser());
+
+        System.out.println("stats: "+stat.toString());
+        return stat;
+    }
 
     @GetMapping("/index")
     public String getIndexPage(Model model, Authentication auth){
@@ -59,15 +101,8 @@ public class AppController {
 
         });
 
-        UserDto userDto = userService.getUserDtoByName(auth.getName());
-        com.fardoushlab.iccweb.request_models.User user = new com.fardoushlab.iccweb.request_models.User();
-
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setRole(Util.getStringRole(userDto.getRole()));
-        user.setProfilePictureUrl(userDto.getProfilePictureUrl());
-
-        model.addAttribute("user",user);
+        model.addAttribute("stat", getStats());
+        model.addAttribute("user",getCurrentUser(auth));
         model.addAttribute("country", new Country());
         model.addAttribute("countryList",countryList);
 

@@ -383,4 +383,61 @@ public class TeamService {
 
     }
 
+    public Long countTotalTeam(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> teamCountQuery = cb.createQuery(Long.class);
+        Root<Team> root = teamCountQuery.from(Team.class);
+        teamCountQuery.select(cb.count(root.get("id")));
+
+
+        var query = session.createQuery(teamCountQuery);
+
+        Long totalTeam = Long.valueOf(0);
+        try {
+            totalTeam =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return totalTeam;
+    }
+
+    public Long countActiveTeam(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> teamCountQuery = cb.createQuery(Long.class);
+        Root<Team> root = teamCountQuery.from(Team.class);
+        teamCountQuery.select(cb.count(root.get("id")));
+        teamCountQuery.where(cb.isTrue(root.get("isActive")));
+
+
+        var query = session.createQuery(teamCountQuery);
+
+        Long activeTeam = Long.valueOf(0);
+        try {
+            activeTeam =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return activeTeam;
+    }
+
 }

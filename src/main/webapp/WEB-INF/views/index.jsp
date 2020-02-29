@@ -52,7 +52,64 @@
                 </div>
 
 
-                <div class="row">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-header">Country</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Total country: ${stat.totalCountry}</h5>
+                                    <p class="card-text float-left">Active: ${stat.activeCountry}</p>
+                                    <p class="card-text float-right">Inactive: ${stat.inActiveCountry}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-header">Team</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Team: ${stat.totalTeam}</h5>
+                                    <p class="card-text float-left">Active: ${stat.activeTeam}</p>
+                                    <p class="card-text float-right">Inactive: ${stat.inactiveTeam}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-header">Coaching staff</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Total coaching staff: ${stat.totalCoach}</h5>
+                                    <p class="card-text float-left">Active: ${stat.activeCoach}</p>
+                                    <p class="card-text float-right">Inactive: ${stat.inActiveCoach}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-header">Player</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Total player: ${stat.totalPlayer}</h5>
+                                    <p class="card-text float-left">Active: ${stat.activePlayer}</p>
+                                    <p class="card-text float-right">Inactive: ${stat.inActivePlayer}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-header">User</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Total user: ${stat.totalUser}</h5>
+                                    <p class="card-text float-left">Active: ${stat.activeUser}</p>
+                                    <p class="card-text float-right">Inactive: ${stat.inActiveUser}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card" style="margin-top: 10px">
                             <h5 class="card-header">Team member of Country </h5>

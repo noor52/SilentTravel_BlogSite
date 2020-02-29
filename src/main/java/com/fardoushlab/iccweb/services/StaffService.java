@@ -369,4 +369,61 @@ public class StaffService {
     }
 
 
+    public Long countTotalStaff(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> staffCriteriaQuery = cb.createQuery(Long.class);
+        Root<CoachingStaff> root = staffCriteriaQuery.from(CoachingStaff.class);
+        staffCriteriaQuery.select(cb.count(root.get("id")));
+
+
+        var query = session.createQuery(staffCriteriaQuery);
+
+        Long totalStaff = Long.valueOf(0);
+        try {
+            totalStaff =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return totalStaff;
+    }
+
+    public Long countActiveStaff(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> staffCriteriaQuery = cb.createQuery(Long.class);
+        Root<CoachingStaff> root = staffCriteriaQuery.from(CoachingStaff.class);
+        staffCriteriaQuery.select(cb.count(root.get("id")));
+        staffCriteriaQuery.where(cb.isTrue(root.get("isActive")));
+
+
+        var query = session.createQuery(staffCriteriaQuery);
+
+        Long activeStaff = Long.valueOf(0);
+        try {
+            activeStaff =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return activeStaff;
+    }
+
 }

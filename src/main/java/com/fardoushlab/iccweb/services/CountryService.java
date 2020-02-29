@@ -246,6 +246,62 @@ public class CountryService {
 
         }
 
+    public Long countTotalcountry(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> countryCriteriaQuery = cb.createQuery(Long.class);
+        Root<Country> root = countryCriteriaQuery.from(Country.class);
+        countryCriteriaQuery.select(cb.count(root.get("name")));
+
+
+        var query = session.createQuery(countryCriteriaQuery);
+
+        Long totalCountry = Long.valueOf(0);
+        try {
+            totalCountry =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return totalCountry;
+    }
+
+    public Long countActivecountry(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> countryCriteriaQuery = cb.createQuery(Long.class);
+        Root<Country> root = countryCriteriaQuery.from(Country.class);
+        countryCriteriaQuery.select(cb.count(root.get("name")));
+        countryCriteriaQuery.where(cb.isTrue(root.get("isActive")));
+
+
+        var query = session.createQuery(countryCriteriaQuery);
+
+        Long activeCountry = Long.valueOf(0);
+        try {
+            activeCountry =   query.getSingleResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return activeCountry;
+    }
 
 
     }
