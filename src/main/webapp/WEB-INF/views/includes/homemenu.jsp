@@ -8,14 +8,14 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12 text-center">
         <h4>ICC WEB</h4>
     </div>
 </div>
 <%--START profile section--%>
 <div class="row profile">
     <div class="col-sm-12">
-        <div class="profile-userpic">
+        <div class="profile-userpic text-center">
             <a href="${pageContext.request.contextPath}/user/profile">
                 <img src="${user.profilePictureUrl}" class="img-responsive align-self-center" alt="">
             </a>
