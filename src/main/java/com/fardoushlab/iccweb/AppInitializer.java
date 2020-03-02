@@ -22,7 +22,7 @@ public class AppInitializer implements WebApplicationInitializer {
 
         AnnotationConfigWebApplicationContext ac = new AnnotationConfigWebApplicationContext();
         ac.register(AppConfig.class);
-        ac.getEnvironment().setActiveProfiles("dev");
+        ac.getEnvironment().setActiveProfiles("prod");
         ac.refresh();
 
         servletContext.addListener(new ContextLoaderListener(ac));
@@ -34,6 +34,8 @@ public class AppInitializer implements WebApplicationInitializer {
         dynamic.setLoadOnStartup(1);
 
         dynamic.addMapping("/");
+
+
         File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
 
         MultipartConfigElement element = new MultipartConfigElement(uploadDirectory.getAbsolutePath(), MAX_UPLOAD_SIZE,MAX_UPLOAD_SIZE * 2, MAX_UPLOAD_SIZE / 2);

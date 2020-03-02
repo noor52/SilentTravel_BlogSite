@@ -74,19 +74,19 @@
 
                                 <div class="row">
                                     <div class="col-sm-12 form-group">
-                                        <label for="student_age">Age: </label>
-                                        <form:input id="student_age" class="form-control" path="age"/>
+                                        <label for="player_age">Age: </label>
+                                        <form:input id="player_age" class="form-control" path="age"/>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-sm-12 form-group">
-                                        <label for="student_country">Country</label>
-                                        <form:input id="student_country" class="form-control" path="countryName" readonly="true"/>
+                                        <label for="player_country">Country</label>
+                                        <form:input id="player_country" class="form-control" path="countryName" readonly="true"/>
                                     </div>
                                 </div>
 
-                                <input class="btn btn-primary float-right" type="submit" name="submit" value="Save Student" style="margin-top: 10px"/>
+                                <input class="btn btn-primary float-right" type="submit" name="submit" value="Save Player" style="margin-top: 10px"/>
 
                                 </form:form>
                             </div>

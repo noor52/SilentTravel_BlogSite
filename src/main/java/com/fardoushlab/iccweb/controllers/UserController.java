@@ -5,6 +5,7 @@ import com.fardoushlab.iccweb.models.Role;
 import com.fardoushlab.iccweb.models.User;
 import com.fardoushlab.iccweb.services.UserService;
 import com.fardoushlab.iccweb.util.Util;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.security.Principal;
@@ -28,6 +30,10 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ServletContext servletContext;
+
 
     private com.fardoushlab.iccweb.request_models.User getCurrentUser(Authentication authentication){
         UserDto userDto = userService.getUserDtoByName(authentication.getName());
@@ -60,7 +66,7 @@ public class UserController {
         user.setActive(true);
         user.setPassword(passwordEncoder.encode("admin123"));
         // default profile picture
-        user.setProfilePictureUrl("/profile/images/default_profile.jpg");
+        user.setProfilePictureUrl("/images/profile/default_profile.jpg");
 
         userService.saveUser(user);
 
@@ -83,16 +89,18 @@ public class UserController {
     @PostMapping("/user/uploadFile")
     public String uploadFiles(@RequestParam(name = "file")MultipartFile multipartFile, ModelMap modelMap){
 
+
         org.springframework.security.core.userdetails.User authenticateduser  = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("user name: "+authenticateduser.getUsername());
         UserDto user = userService.getUserDtoByName(authenticateduser.getUsername());
         String pictureName = "pp"+user.getId()+".jpg";
         // Save file on system
-        if (!multipartFile.getOriginalFilename().isEmpty()) {
+       if (!multipartFile.getOriginalFilename().isEmpty()) {
 
 
             try {
-                File directory = new File("D:/project/SingleFileUpload");
+
+
+                File directory = new File( servletContext.getRealPath("/WEB-INF/resources/images/profile/") );
 
 
                 if (!directory.exists()){
@@ -104,7 +112,8 @@ public class UserController {
                     }
                 }
 
-               // File outputfile = new File(directory, multipartFile.getOriginalFilename());
+                System.out.println("dir path: "+directory.getAbsolutePath());
+
                 File outputfile = new File(directory, pictureName);
 
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputfile));
@@ -112,7 +121,7 @@ public class UserController {
                 outputStream.flush();
                 outputStream.close();
 
-                userService.updateuserProfilePicture(user.getName(),"/profile/images/"+pictureName);
+                userService.updateuserProfilePicture(user.getName(),"/images/profile/"+pictureName);
 
                 System.out.println("file name: "+outputfile.getName());
                 modelMap.addAttribute("fileName",outputfile.getName());
