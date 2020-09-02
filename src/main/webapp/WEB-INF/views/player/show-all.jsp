@@ -42,7 +42,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel BlogSite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
                         </nav>
                     </div>
@@ -52,12 +52,12 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="card" style="margin-top: 10px">
-                            <div class="card-header"> List of Player</div>
+                            <div class="card-header"> List of Active  Blogger</div>
 
                             <table class="table table-bordered">
                                 <thead >
                                 <tr>
-                                    <th>Player Name</th>
+                                    <th>Blogger Name</th>
                                     <th>Age</th>
                                     <th>Date of Birth</th>
                                     <th>Country</th>
@@ -91,18 +91,54 @@
 
                 <div class="row">
                     <div class="col-sm-12">
+                        <div class="card" style="margin-top: 10px">
+                            <div class="card-header"> List of Deactive Blogger</div>
+
+                            <table class="table table-bordered">
+                                <thead >
+                                <tr>
+                                    <th>Blogger Name</th>
+                                    <th>Age</th>
+                                    <th>Date of Birth</th>
+                                    <th>Country</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${deactive_player_list}" var="player">
+                                    <tr>
+                                        <td>${player.name}</td>
+                                        <td>${player.age}</td>
+                                        <td>${player.dob}</td>
+                                        <td>${player.countryName}</td>
+                                        <sec:authorize access="hasAnyRole('SUPER_ADMIN','TEAM_MANAGER')">
+                                            <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/player/edit?id=${player.id}">Activate</a></td>
+                                        </sec:authorize>
+                                    </tr>
+                                </c:forEach>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                </br>
+
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Search player by name</div>
-                                <form:form  class="form-control form-group"  action="${pageContext.request.contextPath}/player/search" method="GET">
+                            <form:form  class="form-control form-group"  action="${pageContext.request.contextPath}/player/search" method="GET">
 
-                                    <div class="row">
-                                        <div class="col-sm-12 form-group">
-                                            <label for="search_name">Player name</label>
-                                            <input id="search_name" type="text" class="form-control player_query"  placeholder="Player name">
-                                        </div>
-                                        <a class="btn btn-primary float-right player_query_submit ">Search</a>
+                                <div class="row">
+                                    <div class="col-sm-12 form-group">
+                                        <label for="search_name">Player name</label>
+                                        <input id="search_name" type="text" class="form-control player_query"  placeholder="Player name">
                                     </div>
-                                </form:form>
+                                    <a class="btn btn-primary float-right player_query_submit ">Search</a>
+                                </div>
+                            </form:form>
 
                         </div>
 

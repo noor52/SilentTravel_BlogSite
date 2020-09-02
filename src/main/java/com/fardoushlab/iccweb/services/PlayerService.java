@@ -145,6 +145,71 @@ public class PlayerService {
         return playerDtoList;
     }
 
+    public List<PlayerDto> getAllDeactivePlayer(){
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Player> playerCriteriaQuery = cb.createQuery(Player.class);
+        Root<Player> root = playerCriteriaQuery.from(Player.class);
+        playerCriteriaQuery.where(cb.isFalse(root.get("isActive")));
+
+        var query = session.createQuery(playerCriteriaQuery);
+
+        var playerDtoList = new ArrayList<PlayerDto>();
+        try {
+            query.getResultList().forEach(player -> {
+                PlayerDto dto = new PlayerDto();
+                BeanUtils.copyProperties(player,dto);
+                playerDtoList.add(dto);
+            });
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+
+        return playerDtoList;
+    }
+    public PlayerDto  getActivePlayerById(long playerId){
+
+
+        var session = hibernateConfig.getSession();
+        var transaction = session.getTransaction();
+
+        if (!transaction.isActive()){
+            transaction = session.beginTransaction();
+        }
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Player> playerCriteriaQuery = cb.createQuery(Player.class);
+        Root<Player> root = playerCriteriaQuery.from(Player.class);
+//        playerCriteriaQuery.where(cb.equal(root.get("id"),playerId));
+        playerCriteriaQuery.where(cb.isTrue(root.get("isActive")));
+
+        var query = session.createQuery(playerCriteriaQuery);
+
+        PlayerDto playerDto = new PlayerDto();
+        try {
+            Player player = query.getSingleResult();
+            if (player == null){
+                throw new ResourceNotFoundException("No player found");
+            }
+            BeanUtils.copyProperties(player,playerDto);
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+        return playerDto;
+    }
     public PlayerDto  getPlayerById(long playerId){
 
 

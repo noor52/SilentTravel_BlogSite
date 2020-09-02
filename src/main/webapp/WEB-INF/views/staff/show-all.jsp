@@ -50,7 +50,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="card" style="margin-top: 10px">
-                            <div class="card-header"> List of coaching staff</div>
+                            <div class="card-header"> List of Admin</div>
 
                             <table class="table table-bordered">
                                 <thead >

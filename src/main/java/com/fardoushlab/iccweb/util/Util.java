@@ -52,6 +52,9 @@ public class Util {
             case ROLE_PLAYER:
                 strRole = "PLAYER";
                 break;
+//            case ROLE_BLOGGER:
+//                strRole = "BLOGGER";
+//                break;
             case ROLE_USER:
                 strRole = "USER";
                 break;

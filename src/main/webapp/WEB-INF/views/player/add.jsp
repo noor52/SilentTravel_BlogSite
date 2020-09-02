@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel BlogSite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
                         </nav>
                     </div>
@@ -49,7 +49,7 @@
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card" style="margin-top: 10px">
                             <div class="card-body">
-                                <h5 class="card-title">Add Player information</h5>
+                                <h5 class="card-title">Add Blogger information</h5>
                                 <form:form  class="form-group" action="${pageContext.request.contextPath}/player/add" modelAttribute="player" >
 
                                     <div class="row">

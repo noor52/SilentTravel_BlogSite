@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel BlogSite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
                         </nav>
                     </div>
@@ -70,12 +70,12 @@
 
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" id="active" name="isActive" value="true"/>
-                                               <%-- <form:radiobutton class="form-check-input" id="active" path="isActive" value="true"/>--%>
+                                                    <%-- <form:radiobutton class="form-check-input" id="active" path="isActive" value="true"/>--%>
                                                 <label class="form-check-label" for="active">Active</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" id="inactive" name="isActive" value="false"/>
-                                              <%--  <form:radiobutton class="form-check-input" id="inactive" path="isActive" value="false"/>--%>
+                                                    <%--  <form:radiobutton class="form-check-input" id="inactive" path="isActive" value="false"/>--%>
                                                 <label class="form-check-label" for="inactive">InActive</label>
                                             </div>
                                         </div>

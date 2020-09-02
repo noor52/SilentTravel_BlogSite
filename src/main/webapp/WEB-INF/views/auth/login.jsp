@@ -52,7 +52,7 @@
                                                    class="form-control" name="password" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-black">Login</button>
-             <%--   <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-secondary">Register</a>--%>
+                <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-secondary">Register</a>
             </form>
         </div>
     </div>

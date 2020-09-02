@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit staff</title>
+    <title>Edit Admin or staff</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profile.css">
@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel BlogSite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
                         </nav>
                     </div>
@@ -51,7 +51,7 @@
                         <div class="card" style="margin-top: 10px">
 
                             <div class="card-body">
-                                <h5 class="card-title">Edit coaching staff information</h5>
+                                <h5 class="card-title">Edit Admin information</h5>
 
                                 <form:form action="${pageContext.request.contextPath}/staff/edit" method="post" modelAttribute="staff" >
 
@@ -86,7 +86,7 @@
                                         </div>
                                     </div>
 
-                                    <input class="btn btn-primary float-right" type="submit" name="submit" value="Save Staff" style="margin-top: 10px"/>
+                                    <input class="btn btn-primary float-right" type="submit" name="submit" value="Save Admin" style="margin-top: 10px"/>
 
                                 </form:form>
                             </div>

@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel BlogSite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
                         </nav>
                     </div>
@@ -51,7 +51,7 @@
                         <div class="card" style="margin-top: 10px">
 
                             <div class="card-body">
-                                <h5 class="card-title">Edit Player information</h5>
+                                <h5 class="card-title">Edit Blogger information</h5>
 
                                 <form:form action="${pageContext.request.contextPath}/player/edit" method="post" modelAttribute="player" >
 
@@ -68,25 +68,25 @@
                                     <div class="form-group row">
                                         <div class="col-sm-12">
                                             <label for="dobdatepicker">Date of Birth</label>
-                                                <form:input id="dobdatepicker" class="form-control" path="dob"/>
+                                            <form:input id="dobdatepicker" class="form-control" path="dob"/>
                                         </div>
                                     </div>
 
-                                <div class="row">
-                                    <div class="col-sm-12 form-group">
-                                        <label for="player_age">Age: </label>
-                                        <form:input id="player_age" class="form-control" path="age"/>
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label for="player_age">Age: </label>
+                                            <form:input id="player_age" class="form-control" path="age"/>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-sm-12 form-group">
-                                        <label for="player_country">Country</label>
-                                        <form:input id="player_country" class="form-control" path="countryName" readonly="true"/>
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label for="player_country">Country</label>
+                                            <form:input id="player_country" class="form-control" path="countryName" readonly="true"/>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <input class="btn btn-primary float-right" type="submit" name="submit" value="Save Player" style="margin-top: 10px"/>
+                                    <input class="btn btn-primary float-right" type="submit" name="submit" value="Activate Blogger" style="margin-top: 10px"/>
 
                                 </form:form>
                             </div>

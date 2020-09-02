@@ -81,7 +81,7 @@ public class PlayerController {
         User user = new User();
         user.setName(player.getName());
         user.setRole(Role.ROLE_PLAYER);
-        user.setActive(true);
+        user.setActive(false);
         user.setPassword(passwordEncoder.encode("player"));
 
         PlayerDto playerDto = new PlayerDto();
@@ -89,7 +89,7 @@ public class PlayerController {
 
         LocalDate dob = Util.getFormattedDate(player.getDob(),Util.DOB_DATE_FORMAT);
         playerDto.setDob(dob);
-        playerDto.setActive(true);
+        playerDto.setActive(false);
         playerDto.setUser(user);
         playerDto.setCountry(country);
 
@@ -100,8 +100,8 @@ public class PlayerController {
 
     @GetMapping("/player/show-all")
     public String showAllPlayer(Model model, Authentication authentication){
-
         var playerList = new ArrayList<Player>();
+        var deactivePlayerList = new ArrayList<Player>();
 
         playerService.getAllPlayer().forEach(playerDto -> {
             var player  = new Player();
@@ -114,8 +114,22 @@ public class PlayerController {
 
         });
 
+        playerService.getAllDeactivePlayer().forEach(playerDto -> {
+            var player  = new Player();
+
+            BeanUtils.copyProperties(playerDto,player);
+            player.setCountryName(playerDto.getCountry().getName());
+            player.setName(playerDto.getUser().getName());
+            player.setDob(Util.getStringDate(playerDto.getDob(),Util.DOB_DATE_FORMAT));
+            deactivePlayerList.add(player);
+
+        });
+
+
+
         model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("player_list",playerList);
+        model.addAttribute("deactive_player_list",deactivePlayerList);
         return "player/show-all";
     }
 
@@ -128,7 +142,7 @@ public class PlayerController {
         player.setCountryId(playerDto.getCountry().getId());
         player.setName(playerDto.getUser().getName());
         player.setDob(Util.getStringDate(playerDto.getDob(),Util.DOB_DATE_FORMAT));
-
+        player.setActive(true);
 
         model.addAttribute("user",getCurrentUser(authentication));
         model.addAttribute("player",player);
@@ -142,6 +156,7 @@ public class PlayerController {
 
         playerDto.setDob(Util.getFormattedDate(player.getDob(),Util.DOB_DATE_FORMAT));
         playerDto.setAge(player.getAge());
+        playerDto.setActive(true);
 
         playerService.saveEditedPlayer(playerDto);
         return "redirect:/player/show-all";

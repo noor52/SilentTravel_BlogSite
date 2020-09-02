@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel Bloggsite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary float-right">Logout</a>
                         </nav>
                     </div>
@@ -66,9 +66,9 @@
 
                         <div class="col-sm-4">
                             <div class="card">
-                                <div class="card-header">Team</div>
+                                <div class="card-header"> Blog Groups</div>
                                 <div class="card-body">
-                                    <h5 class="card-title">Total Team: ${stat.totalTeam}</h5>
+                                    <h5 class="card-title">Total Group: ${stat.totalTeam}</h5>
                                     <p class="card-text float-left">Active: ${stat.activeTeam}</p>
                                     <p class="card-text float-right">Inactive: ${stat.inactiveTeam}</p>
                                 </div>
@@ -77,9 +77,9 @@
 
                         <div class="col-sm-4">
                             <div class="card">
-                                <div class="card-header">Coaching staff</div>
+                                <div class="card-header">Admin</div>
                                 <div class="card-body">
-                                    <h5 class="card-title">Total coaching staff: ${stat.totalCoach}</h5>
+                                    <h5 class="card-title">Total Admin: ${stat.totalCoach}</h5>
                                     <p class="card-text float-left">Active: ${stat.activeCoach}</p>
                                     <p class="card-text float-right">Inactive: ${stat.inActiveCoach}</p>
                                 </div>
@@ -89,9 +89,9 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="card">
-                                <div class="card-header">Player</div>
+                                <div class="card-header">Blogger</div>
                                 <div class="card-body">
-                                    <h5 class="card-title">Total player: ${stat.totalPlayer}</h5>
+                                    <h5 class="card-title">Total blogger: ${stat.totalPlayer}</h5>
                                     <p class="card-text float-left">Active: ${stat.activePlayer}</p>
                                     <p class="card-text float-right">Inactive: ${stat.inActivePlayer}</p>
                                 </div>
@@ -111,16 +111,16 @@
                     </div>
                     <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="card" style="margin-top: 10px">
-                            <h5 class="card-header">Team member of Country </h5>
-                            <div class="card-body">
+<%--                        <div class="card" style="margin-top: 10px">--%>
+<%--                            <h5 class="card-header">Team member of Country </h5>--%>
+<%--                            <div class="card-body">--%>
 
-                                <form:form  class="form-group" action="${pageContext.request.contextPath}/team/team-members" method="post" modelAttribute="country" >
-                                    <form:select class="form-control" path="id" items="${countryList}" itemLabel="name" itemValue="id"/>
-                                    <input class="btn btn-primary float-right" type="submit" name="submit" value="See members" style="margin-top: 10px"/>
-                                </form:form>
-                            </div>
-                        </div>
+<%--                                <form:form  class="form-group" action="${pageContext.request.contextPath}/team/team-members" method="post" modelAttribute="country" >--%>
+<%--                                    <form:select class="form-control" path="id" items="${countryList}" itemLabel="name" itemValue="id"/>--%>
+<%--                                    <input class="btn btn-primary float-right" type="submit" name="submit" value="See members" style="margin-top: 10px"/>--%>
+<%--                                </form:form>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
 
                     </div>
                 </div>

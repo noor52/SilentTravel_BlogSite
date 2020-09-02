@@ -1,9 +1,11 @@
 package com.fardoushlab.iccweb.controllers;
 
+import com.fardoushlab.iccweb.dtos.PlayerDto;
 import com.fardoushlab.iccweb.dtos.UserDto;
 import com.fardoushlab.iccweb.models.Role;
 import com.fardoushlab.iccweb.models.User;
 import com.fardoushlab.iccweb.request_models.Country;
+import com.fardoushlab.iccweb.request_models.Player;
 import com.fardoushlab.iccweb.request_models.Stat;
 import com.fardoushlab.iccweb.services.*;
 import com.fardoushlab.iccweb.util.Util;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -49,11 +52,11 @@ public class AppController {
     PasswordEncoder passwordEncoder;
 
 
-    @GetMapping("/")
-    public String getHomePage(Model model){
-
-        return "redirect:/index";
-    }
+//    @GetMapping("/")
+//    public String getHomePage(Model model){
+//
+//        return "redirect:/index";
+//    }
 
 
     private com.fardoushlab.iccweb.request_models.User getCurrentUser(Authentication authentication){
@@ -90,24 +93,24 @@ public class AppController {
         return stat;
     }
 
-    @GetMapping("/index")
-    public String getIndexPage(Model model, Authentication auth){
-
-        var countryList = new ArrayList<Country>();
-        countryService.getAllCountry().forEach(country->{
-            var countryRm = new Country();
-            BeanUtils.copyProperties(country,countryRm);
-            countryList.add(countryRm);
-
-        });
-
-        model.addAttribute("stat", getStats());
-        model.addAttribute("user",getCurrentUser(auth));
-        model.addAttribute("country", new Country());
-        model.addAttribute("countryList",countryList);
-
-        return "index";
-    }
+//    @GetMapping("/index")
+//    public String getIndexPage(Model model, Authentication auth){
+//
+//        var countryList = new ArrayList<Country>();
+//        countryService.getAllCountry().forEach(country->{
+//            var countryRm = new Country();
+//            BeanUtils.copyProperties(country,countryRm);
+//            countryList.add(countryRm);
+//
+//        });
+//
+//        model.addAttribute("stat", getStats());
+//        model.addAttribute("user",getCurrentUser(auth));
+//        model.addAttribute("country", new Country());
+//        model.addAttribute("countryList",countryList);
+//
+//        return "index";
+//    }
 
     @GetMapping("/login")
     public String getLoginPage(Model model, @RequestParam(name="error",required = false) Boolean error){
@@ -134,37 +137,86 @@ public class AppController {
     }
 
 
+//    @GetMapping("/auth/register")
+//    public String getRegisterPage(Model model, @RequestParam(name="error",required = false) Boolean error){
+//
+//        List<String> roles = new ArrayList<>(Arrays.asList("USER","PLAYER"));
+//        model.addAttribute("error",error);
+//        model.addAttribute("user", new com.fardoushlab.iccweb.request_models.User());
+//        model.addAttribute("role_list",roles);
+//
+//
+//        return "auth/register";
+//    }
     @GetMapping("/auth/register")
-    public String getRegisterPage(Model model, @RequestParam(name="error",required = false) Boolean error){
+    public String getPlayerAddPage(Model model){
 
-        List<String> roles = new ArrayList<>(Arrays.asList("USER","PLAYER"));
-        model.addAttribute("error",error);
-        model.addAttribute("user", new com.fardoushlab.iccweb.request_models.User());
-        model.addAttribute("role_list",roles);
+        var countryList = new ArrayList<Country>();
+        countryService.getAllCountry().forEach(country->{
+            var countryRm = new Country();
+            BeanUtils.copyProperties(country,countryRm);
+            countryList.add(countryRm);
+
+        });
 
 
-        return "auth/register";
+        model.addAttribute("player", new Player());
+        model.addAttribute("country_list",countryList);
+
+        return "/auth/register";
     }
+
+
+    @PostMapping("/auth/register")
+    public String addNewPlayer(Model model, @ModelAttribute(name = "player") Player player){
+
+        System.out.println(player.toString());
+
+        var country = countryService.getCountryById(player.getCountryId());
+        User user = new User();
+        user.setName(player.getName());
+        user.setRole(Role.ROLE_PLAYER);
+        user.setActive(false);
+        user.setPassword(passwordEncoder.encode("player"));
+
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setAge(player.getAge());
+
+        LocalDate dob = Util.getFormattedDate(player.getDob(),Util.DOB_DATE_FORMAT);
+        playerDto.setDob(dob);
+        playerDto.setActive(true);
+        playerDto.setUser(user);
+        playerDto.setCountry(country);
+
+        playerService.addPlayer(playerDto);
+
+        return "redirect:/auth/login";
+
+    }
+
 
     @GetMapping("/403")
     public String _403(){
         return "403";
     }
+
+
+    @GetMapping("/dashbord")
+    public String dashbord(Model model, Authentication auth){
+
+        var countryList = new ArrayList<Country>();
+        countryService.getAllCountry().forEach(country->{
+            var countryRm = new Country();
+            BeanUtils.copyProperties(country,countryRm);
+            countryList.add(countryRm);
+
+        });
+
+        model.addAttribute("stat", getStats());
+        model.addAttribute("user",getCurrentUser(auth));
+        model.addAttribute("country", new Country());
+        model.addAttribute("countryList",countryList);
+
+        return "dashbord";
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

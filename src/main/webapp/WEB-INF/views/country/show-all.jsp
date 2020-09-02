@@ -45,7 +45,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <nav class="navbar navbar-light bg-light justify-content-between">
-                            <a class="navbar-brand">ICC WEB</a>
+                            <a class="navbar-brand">SilentTravel BlogSite</a>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
                         </nav>
                     </div>
@@ -57,27 +57,27 @@
                         <div class="card" style="margin-top: 10px">
                             <div class="card-header"> List of countries</div>
 
-                                <table class="table table-bordered">
-                                    <thead >
-                                        <tr>
-                                            <th colspan="3">Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach items="${countryList}" var="country">
+                            <table class="table table-bordered">
+                                <thead >
+                                <tr>
+                                    <th colspan="3">Name</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${countryList}" var="country">
 
-                                        <tr>
-                                            <td>${country.name}</td>
-                                            <sec:authorize access="hasAnyRole('SUPER_ADMIN','ADMIN')">
-                                                <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/country/edit?id=${country.id}">Edit</a> </td>
-                                                <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/country/delete?id=${country.id}">Delete</a></td>
-                                            </sec:authorize>
+                                    <tr>
+                                        <td>${country.name}</td>
+                                        <sec:authorize access="hasAnyRole('SUPER_ADMIN','ADMIN')">
+                                            <td><a class="btn btn-warning" href="${pageContext.request.contextPath}/country/edit?id=${country.id}">Edit</a> </td>
+                                            <td><a class="btn btn-danger" href="${pageContext.request.contextPath}/country/delete?id=${country.id}">Delete</a></td>
+                                        </sec:authorize>
 
-                                        </tr>
-                                    </c:forEach>
+                                    </tr>
+                                </c:forEach>
 
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
 
                         </div>
 
